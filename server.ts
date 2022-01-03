@@ -5,6 +5,7 @@ import { UserController } from './src/controller/user_controller';
 
 export const server = express();
 
+
 server.use(express.json());
 server.use(cors());
 
