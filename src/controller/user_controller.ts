@@ -31,33 +31,32 @@ UserController.get('/allCompanies', async (req, res) => {
 
 UserController.post('/login', async (req, res) => {
     try {
+        const user = await user_repository.getUser(req.body.email);
 
-        const user = await user_repository.getUser(req.body.username);
-        console.log(user);
         if (user) {
-            const samePassword = await bcrypt.compare(req.body.password, user.password);
-            console.log(samePassword);
-            if (samePassword) {
+            let samePWD = await bcrypt.compare(req.body.password, user.password)
+            if (samePWD) {
                 res.json({
-                    loggedIn: true,
                     user,
+                    loggedIn: true,
                     token: generateToken({
                         id: user.user_id,
-                        username: user.username
+                        name: user.name,
+                        email: user.email,
+                        role: user.role
                     })
                 });
-                return;
+                console.log("user is ", user);
+
+                return
             }
         }
-        res.status(401).json({ loggedIn: false, error: 'Wrong username and/or password' });
-
-
+        res.status(401).json({ loggedIn: false, error: ' Wrong email / password' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ loggedIn: false, error });
+        res.status(500).json(error);
     }
 });
-
 
 
 UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {

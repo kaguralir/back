@@ -6,7 +6,7 @@ import { user_repository } from "../src/repository/user_repository";
 
 
 
-export function generateToken(payload:string, expire = 60 * 60) {
+export function generateToken(payload:any, expire = 60 * 60) {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: expire });
     return token;
 
