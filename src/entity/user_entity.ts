@@ -18,7 +18,7 @@ export  class User {
 
 
      */
-    constructor(public  user_id:string, public demo : string, public role: string, public  organizationId: number, public projectId:number, public name : string,  public email : string, public password : string, public mobile: number, public createdAt : Date, public updatedAt : Date) {
+    constructor(public  user_id:number, public demo : string, public role: string, public  organizationId: number, public projectId:number, public name : string,  public email : string, public password : string, public mobile: number, public createdAt : Date, public updatedAt : Date) {
         
     }
 }

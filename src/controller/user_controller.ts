@@ -11,7 +11,7 @@ export const UserController = Router();
 
 UserController.get('/allCompanies', async (req, res) => {
     try {
-        const post = await getAllCompanies();
+        const post = await user_repository.getAllCompanies();
 
         return res.status(200).json({
             success: true,
@@ -32,7 +32,7 @@ UserController.get('/allCompanies', async (req, res) => {
 UserController.post('/login', async (req, res) => {
     try {
 
-        const user = await getUser(req.body.username);
+        const user = await user_repository.getUser(req.body.username);
         console.log(user);
         if (user) {
             const samePassword = await bcrypt.compare(req.body.password, user.password);
@@ -42,7 +42,7 @@ UserController.post('/login', async (req, res) => {
                     loggedIn: true,
                     user,
                     token: generateToken({
-                        id: user.id,
+                        id: user.user_id,
                         username: user.username
                     })
                 });
