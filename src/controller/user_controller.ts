@@ -59,6 +59,39 @@ UserController.post('/login', async (req, res) => {
 });
 
 
+UserController.post('/register', async (req, res) => {
+    try {
+
+        const newUser = new User(req.body);
+
+        const exists = await user_repository.getUser({ email: newUser.email });
+        if (exists) {
+            res.status(400).json({ error: 'L_email est déjà utilisé.' })
+            return
+        }
+
+        newUser.password = await bcrypt.hash(newUser.password, 11);
+        console.log(newUser.password)
+
+        await user_repository.addUser(newUser);
+        res.status(201).json({
+            message: 'Nouvel utilisateur enregistré',
+            user: newUser,
+            token: generateToken({
+                email: newUser.email
+            })
+        });
+
+        console.log(" Nouvel utilisateur est : ", newUser.email);
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});
+
+
 UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     res.json(req.user);
