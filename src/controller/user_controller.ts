@@ -63,12 +63,15 @@ UserController.post('/register', async (req, res) => {
     try {
 
         const newUser = new User(req.body);
+        console.log("New user email is", newUser.email);
+        
 
-        const exists = await user_repository.getUser({ email: newUser.email });
+        const exists = await user_repository.getUser(newUser.email);
         if (exists) {
-            res.status(400).json({ error: 'L_email est déjà utilisé.' })
-            return
+            res.status(400).json({ error: 'Username already taken' });
+            return;
         }
+
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
         console.log(newUser.password)
