@@ -3,7 +3,6 @@ import { User } from "../entity/user_entity";
 import { connection } from "./connection";
 
 
-
 export class user_repository {
 
     /**
@@ -13,8 +12,8 @@ export class user_repository {
     static async getUser(email:string) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE email=?', [email]);
         if (rows.length === 1) {
-            return new User(rows[0].user_id, rows[0].demo, rows[0].role,rows[0].organizationId, rows[0].projectId,rows[0].name, rows[0].email,rows[0].password, rows[0].mobile,rows[0].createdAt, rows[0].updatedAt
-                );
+            return new User({user_id:rows[0].user_id, demo:rows[0].demo, role: rows[0].role, organizationId: rows[0].organizationId, projectId: rows[0].projectId,name: rows[0].name, email: rows[0].email, password:rows[0].password, mobile: rows[0].mobile, createdAt:rows[0].createdAt, updatedAt :rows[0].updatedAt
+            });
         }
         return null;
 
@@ -24,18 +23,8 @@ export class user_repository {
     static async  getAllCompanies() {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE role LIKE company');
     
-    
-       /*  const allCompanies = [];
-        for (const row of rows) {
-            let instance = new User(rows['user_id'], rows.demo, rows.role,rows.organizationId, rows.projectId,rows.name, rows.email,rows.password, rows.mobile,rows.createdAt, rows.updatedAt);
-            allCompanies.push(instance);
-    
-        }
-        return allCompanies; */
 
-        return rows.map(row => new User(row['user_id'], row['demo'], row['role'], row['organizationId'],row['projectId'], row['name'], row['email'], row['password'], row['mobile'], row['createdAt'], row['updatedAt']));
-
-
+        return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
     
     }
     
@@ -44,13 +33,13 @@ export class user_repository {
     static async getAllCandidates() {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * From user WHERE role LIKE candidate');
 
-        return rows.map(row => new User(row['user_id'], row['demo'], row['role'], row['organizationId'],row['projectId'], row['name'], row['email'], row['password'], row['mobile'], row['createdAt'], row['updatedAt']));
+        return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
 
     }
 
     static async searchUsers(term:string) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE CONCAT(name) LIKE ?', ['%' + term + '%'])
-        return rows.map(row => new User(row['user_id'], row['demo'], row['role'], row['organizationId'],row['projectId'], row['name'], row['email'], row['password'], row['mobile'], row['createdAt'], row['updatedAt']));
+        return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
 
 
     }
