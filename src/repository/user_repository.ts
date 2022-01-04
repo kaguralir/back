@@ -40,15 +40,14 @@ export class user_repository {
     static async searchUsers(term:string) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE CONCAT(name) LIKE ?', ['%' + term + '%'])
         return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
-
-
+/*         SELECT * FROM user WHERE name LIKE 'newbie'
+ */
     }
 
     static async addUser(user:User) {
         try{
         const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,organizationId, projectId,name, email,password, mobile,updatedAt) VALUES (?,?,?,?,?,?, ?,  ?,?)', [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
         user.user_id = addedUser.insertId;
-    console.log("add user repository is", addedUser);
     }
         catch(err){
             console.log("adduser repo err is", err)
