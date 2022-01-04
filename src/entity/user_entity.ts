@@ -3,7 +3,7 @@ export class User {
 
 
     public user_id: number;
-    public demo: string;
+    public demo: number;
     public role: string;
     public organizationId: number;
     public projectId: number;

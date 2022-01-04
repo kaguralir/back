@@ -21,7 +21,7 @@ export class user_repository {
 
 
     static async  getAllCompanies() {
-        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE role LIKE company');
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user WHERE role LIKE  '%company%'`);
     
 
         return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
@@ -31,7 +31,7 @@ export class user_repository {
     
 
     static async getAllCandidates() {
-        const [rows] = await connection.query<RowDataPacket[]>('SELECT * From user WHERE role LIKE candidate');
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user WHERE role LIKE  '%candidate%'`);
 
         return rows.map(row => new User({user_id:row['user_id'],demo: row['demo'], role:row['role'],organizationId: row['organizationId'],projectId:row['projectId'], name:row['name'],email: row['email'],password: row['password'], mobile:row['mobile'],createdAt: row['createdAt'], updatedAt:row['updatedAt']}));
 
@@ -45,8 +45,14 @@ export class user_repository {
     }
 
     static async addUser(user:User) {
-        const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,organizationId, projectId,name, email,password, mobile,createdAt, updatedAt) VALUES (?,?,?,?, ?, ?, ?, ? , ?, ?, ?)', [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.mobile, user.createdAt, user.updatedAt]);
+        try{
+        const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,organizationId, projectId,name, email,password, mobile,updatedAt) VALUES (?,?,?,?,?,?, ?,  ?,?)', [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
         user.user_id = addedUser.insertId;
+    console.log("add user repository is", addedUser);
+    }
+        catch(err){
+            console.log("adduser repo err is", err)
+        }
 
     }
 }
