@@ -33,10 +33,9 @@ JobOffersController.get('/allJobs', async (req, res) => {
 JobOffersController.post('/addJob', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const newJob = new JobOffers(req.body);
-        console.log("send data user is", req.body);
+        console.log("send data user id is ", req.user);
         console.log("req user is", req.user);
 
-        console.log("req user is", req.params);
         
         await jobOffers_repository.addJob(newJob,req.user);
         res.status(201).json({

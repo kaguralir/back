@@ -26,7 +26,7 @@ export class jobOffers_repository {
 
     static async addJob(addingJob:JobOffers, userWhoAdds) {
         try{
-        const [addedJob] = await connection.query<ResultSetHeader>('INSERT INTO user jobOffer_id,recruiter_id,available,organizationName,jobProject_id,jobOffer_role,jobOffer_description,createdAt) VALUES (?,?,?,?,?,?,?,?)', [addingJob.jobOffer_id,userWhoAdds.user_id,addingJob.available,addingJob.organizationName,userWhoAdds.projectId,addingJob.jobOffer_role,addingJob.jobOffer_description,addingJob.createdAt]);
+        const [addedJob] = await connection.query<ResultSetHeader>('INSERT INTO jobOffers (recruiter_id,available,organizationName,jobProject_id,jobOffer_role,jobOffer_description) VALUES (?,?,?,?,?,?)', [userWhoAdds.user_id,addingJob.available,addingJob.organizationName,userWhoAdds.projectId,addingJob.jobOffer_role,addingJob.jobOffer_description]);
         addingJob.jobOffer_id = addedJob.insertId;
     }
         catch(err){

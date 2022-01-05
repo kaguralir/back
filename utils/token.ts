@@ -19,17 +19,15 @@ export function configurePassport() {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET
     }, async (payload, done) => {
-console.log("token");
+
 
         try {
             const user = await user_repository.getUser(payload.email);
 
             if (user) {
-            console.log("j is",user);
 
                 return done(null, user);
             }
-            console.log("jwt error is",user);
 
             return done(null, false);
         } catch (error) {
