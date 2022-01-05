@@ -2,6 +2,9 @@ import { Router } from "express";
 import { jobOffers_repository } from "../../repository/recruiter/jobOffers_repository";
 import {JobOffers} from '../../entity/recruiter/jobOffers_entity';
 import bcrypt from 'bcrypt';
+import { generateToken } from "../../../utils/token";
+import passport from "passport";
+import { configurePassport } from "../../../utils/token"
 
 
 
@@ -27,10 +30,13 @@ JobOffersController.get('/allJobs', async (req, res) => {
 
 
 
-JobOffersController.post('/addJob', async (req, res) => {
+JobOffersController.post('/addJob', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const newJob = await new JobOffers(req.body);
+        console.log("send data user is", req.body);
         console.log("req user is", req.user);
+
+        console.log("req user is", req.params);
         
         await jobOffers_repository.addJob(newJob,req.user);
         res.status(201).json({

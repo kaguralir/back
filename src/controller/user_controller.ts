@@ -32,7 +32,8 @@ UserController.get('/allCompanies', async (req, res) => {
 UserController.post('/login', async (req, res) => {
     try {
         const user = await user_repository.getUser(req.body.email);
-
+        
+        
         if (user) {
             let samePWD = await bcrypt.compare(req.body.password, user.password)
             if (samePWD) {
@@ -46,6 +47,7 @@ UserController.post('/login', async (req, res) => {
                         role: user.role
                     })
                 });
+                console.log("user is", req.user);
                 console.log("user is ", user);
 
                 return
@@ -93,6 +95,8 @@ UserController.post('/register', async (req, res) => {
 UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
 
     res.json(req.user);
+    console.log("req user passport", req.user);
+    
 });
 
 
