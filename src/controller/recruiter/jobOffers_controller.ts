@@ -30,18 +30,16 @@ JobOffersController.get('/allJobs', async (req, res) => {
 JobOffersController.post('/addJob', async (req, res) => {
     try {
         const newJob = await new JobOffers(req.body);
-       
-
-        newJob.jobProject_id= req.user.projectId;
-
-        await jobOffers_repository.addJob(newJob,req.user.);
+        console.log("req user is", req.user);
+        
+        await jobOffers_repository.addJob(newJob,req.user);
         res.status(201).json({
             success: true,
-            count: newJob.length,
             data: newJob
             })
-        });
-    } catch (error) {
+        
+    } 
+    catch (error) {
         console.log(error);
         res.status(500).json(error);
     }
