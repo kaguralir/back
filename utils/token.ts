@@ -18,21 +18,22 @@ export function configurePassport() {
     passport.use(new Strategy({
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: process.env.JWT_SECRET
-        ,
-        algorithms: ['RS256']
     }, async (payload, done) => {
+console.log("token");
 
         try {
-            const user = await user_repository.getUser(payload.username);
+            const user = await user_repository.getUser(payload.email);
 
             if (user) {
+            console.log("j is",user);
 
                 return done(null, user);
             }
+            console.log("jwt error is",user);
 
             return done(null, false);
         } catch (error) {
-            console.log(error);
+            console.log("jwt error is",error);
             return done(error, false);
         }
     }))
