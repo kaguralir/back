@@ -17,7 +17,7 @@ JobOffersController.get('/allJobs', async (req, res) => {
             data: post
         });
     } catch (err) {
-        console.log(err);
+        console.log("err get all jobs is",err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
