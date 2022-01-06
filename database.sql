@@ -103,3 +103,15 @@ CREATE TABLE conversations(
   messageSend VARCHAR(1000),
   sendDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
+DROP TABLE IF EXISTS interest;
+CREATE TABLE interest(
+  interest_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  jobApplied_id  INTEGER(100) NULL,
+  CONSTRAINT FK_jobApplied_id FOREIGN KEY (jobApplied_id) REFERENCES jobOffers(jobOffer_id),
+  candidateWhoApplied_id INTEGER(100),
+  CONSTRAINT FK_candidateWhoApplied_id FOREIGN KEY (candidateWhoApplied_id) REFERENCES user(user_id),
+  recruiterJobOffer_id  INTEGER(100)NULL,
+  interest  TINYINT(1) NULL
+);
