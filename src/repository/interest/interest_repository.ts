@@ -19,10 +19,24 @@ export class interest_repository {
 /* interest_id:row['interest_id'],jobApplied_id: row['jobApplied_id'], candidateWhoApplied_id: row['candidateWhoApplied_id'], recruiterJobOffer_id: row['recruiterJobOffer_id'], interest:row['interest']
     interest_id,jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id,interest */  
 
-    static async addCandidateApplication(candidateApplication:Interest) {
+    static async candidateApplying(candidateApplication:Interest) {
         try{
         const [addedApplication] = await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,interest) VALUES (?,?,?)',
          [candidateApplication.jobApplied_id,candidateApplication.candidateWhoApplied_id,candidateApplication.interest]);
+         candidateApplication.interest_id= addedApplication.insertId;
+    }
+        catch(err){
+            console.log("add application repo err is", err)
+        }
+
+    }
+
+    UPDATE interest SET interest = 1 WHERE jobApplied_id = 1 AND candidateWhoApplied_id=2;
+
+    static async candidateAnswer(candidateApplication:Interest, job_id, candidate_id) {
+        try{
+        const [addedApplication] = await connection.query<ResultSetHeader>('UPDATE interest SET interest = 1 WHERE jobApplied_id = ? AND candidateWhoApplied_id=?',
+         [job_id.jobApplied_id,candidate_id.candidateWhoApplied_id,candidateApplication.interest]);
          candidateApplication.interest_id= addedApplication.insertId;
     }
         catch(err){
@@ -35,7 +49,7 @@ export class interest_repository {
 
     static async recruiterLikingCandidate(likingCandidate:Interest) {
         try{
-        const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,organizationId, projectId,name, email,password, mobile,updatedAt) VALUES (?,?,?,?,?,?, ?,  ?,?)', [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
+        const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,interest) VALUES (?,?,?)`, [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
         likingCandidate.user_id = addedUser.insertId;
     }
         catch(err){
@@ -44,9 +58,9 @@ export class interest_repository {
 
     }
 
-    static async recruiterLikingApplier(likingApplier:Interest) {
+    static async recruiterAnswer(likingApplier:Interest) {
         try{
-        const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO interest (demo, role,organizationId, projectId,name, email,password, mobile,updatedAt) VALUES (?,?,?,?,?,?, ?,  ?,?)', [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
+        const [addedUser] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest = 1 WHERE jobApplied_id = ? AND candidateWhoApplied_id=?`, [user.demo, user.role, user.organizationId, user.projectId, user.name, user.email, user.password, user.mobile,  user.updatedAt]);
         likingApplier.user_id = addedUser.insertId;
     }
         catch(err){
