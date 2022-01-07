@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import passport from "passport";
 import { interest_repository } from "../../repository/interest/interest_repository";
 import { user_repository } from "../../repository/user_repository";
+import { Interest } from "../../entity/interest/interest_entity";
 
 
 export const InterestController = Router();
@@ -51,18 +52,52 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
 
 
-InterestController.post('/interestActivity', passport.authenticate('jwt', { session: false }), async (req, res) => {
+InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
 
 
         console.log("req user is", (req.user['role']));
-        console.log("req user is", (req.user['name']));
+        console.log("req user is", (req.user['user_id']));
+        const actualRole = req.user['role'];
+        if (actualRole == "candidat") {
+            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.params.id, req.user['user_id']);
+
+            if (interestExists) {
+                const updateInterest = new Interest({
+                    interest: req.body.interest
+                });
+                const interestUpdated = await interest_repository.candidateAnswer(updateInterest, req.params.id);
+                return res.status(200).json({
+                    success: true,
+                    interest: updateInterest,
+                    data: interestUpdated
+                });
+            }
+        }
 
 
-        /* const actualRole = req.user[0].role;
+        const likedAlready = await findLikesByUsers(users_id, uploads_id);
+        if (!likedAlready) {
+            const postLike = await postLikes(users_id, uploads_id);
 
-        console.log("req user is", actualRole); */
-        const user = await user_repository.getUser(req.body.email);
+            return resp.status(200).json({
+                success: true,
+                count: postLike,
+                data: postLike
+            });
+        }
+        else {
+            const postLike = await deleteLike(users_id, uploads_id);
+
+            return resp.status(200).json({
+                success: true,
+                count: postLike,
+                data: postLike
+            });
+        }
+
+
+
 
     } catch (error) {
         console.log(error);
