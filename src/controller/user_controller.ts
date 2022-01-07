@@ -9,6 +9,12 @@ import { configurePassport } from "../../utils/token"
 
 export const UserController = Router();
 
+UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    res.json(req.user);
+
+});
+
 UserController.get('/allCompanies', async (req, res) => {
     try {
         const post = await user_repository.getAllCompanies();
@@ -41,14 +47,15 @@ UserController.post('/login', async (req, res) => {
                     user,
                     loggedIn: true,
                     token: generateToken({
-                        id: user.user_id,
+                        user_id: user.user_id,
                         name: user.name,
                         email: user.email,
                         role: user.role
                     })
+
+
                 });
-                console.log("user is", req.user);
-                console.log("user is ", user);
+                console.log("user is", user);
 
                 return
             }
@@ -92,11 +99,6 @@ UserController.post('/register', async (req, res) => {
 });
 
 
-UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
 
-    res.json(req.user);
-    console.log("req user passport", req.user);
-
-});
 
 

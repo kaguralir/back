@@ -2,21 +2,28 @@
 export class User {
 
 
-    public user_id: number;
-    public demo: number;
-    public role: string;
-    public organizationId: number;
-    public projectId: number;
-    public name: string;
-    public email: string;
-    public password: string;
-    public mobile: number;
-    public createdAt: Date;
-    public updatedAt: Date;
+  public user_id: number;
+  public demo: number;
+  public role: string;
+  public organizationId: number;
+  public projectId: number;
+  public name: string;
+  public email: string;
+  public password: string;
+  public mobile: number;
+  public createdAt: Date;
+  public updatedAt: Date;
 
-    constructor(params){
-        Object.assign(this,params);
-      }
+  constructor(params) {
+    Object.assign(this, params);
+  }
+  toJSON() {
+    return {
+      user_id: this.user_id,
+      role: this.role,
+
+    }
+  }
 
 
 }
