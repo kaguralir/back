@@ -1,5 +1,6 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { Interest } from "../../entity/interest/interest_entity";
+import { User } from "../../entity/user_entity";
 import { connection } from "../connection";
 
 
@@ -58,18 +59,18 @@ export class interest_repository {
 
     }
 
-    static async getCandidatesWithInterest() {
+    static async getJobCandidatesWithInterest() {
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
         INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND interest IS NULL  `);
 
-        return rows.map(row => new Interest({
-            interest_id: row['interest_id'], jobApplied_id: row['jobApplied_id'], candidateWhoApplied_id: row['candidateWhoApplied_id'], recruiterJobOffer_id: row['recruiterJobOffer_id'], interest: row['interest']
+        return rows.map(row => new User({
+            user_id: row['user_id']
         }));
 
     }
 
-    static async getCandidatesWithoutInterest() {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE candidateWhoApplied_id IS NULL AND role="candidat";`);
+    static async getJobCandidatesWithoutInterest() {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id IS NULL AND role="candidat"`);
 
         return rows.map(row => new Interest({
             interest_id: row['interest_id'], jobApplied_id: row['jobApplied_id'], candidateWhoApplied_id: row['candidateWhoApplied_id'], recruiterJobOffer_id: row['recruiterJobOffer_id'], interest: row['interest']
