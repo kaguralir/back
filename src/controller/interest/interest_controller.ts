@@ -5,6 +5,7 @@ import passport from "passport";
 import { interest_repository } from "../../repository/interest/interest_repository";
 import { user_repository } from "../../repository/user_repository";
 import { Interest } from "../../entity/interest/interest_entity";
+import { User } from "../../entity/user_entity";
 
 
 export const InterestController = Router();
@@ -52,21 +53,27 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
 
 
-InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+InterestController.post('/interestActivity/:jobApplied_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
+
+
 
 
         console.log("req user is", (req.user['role']));
         console.log("req user is", (req.user['user_id']));
         const actualRole = req.user['role'];
+
         if (actualRole == "candidat") {
-            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.params.id, req.user['user_id']);
+            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.params.jobApplied_id, req.user['user_id']);
+            console.log("interest exists", interestExists);
 
             if (interestExists) {
-                const updateInterest = new Interest({
-                    interest: req.body.interest
-                });
-                const interestUpdated = await interest_repository.candidateAnswer(updateInterest, req.params.id);
+                const job_id = req.body.jobApplied_id;
+                const candidat_id = req.body.candidateWhoApplied_id;
+                const updateInterest = new Interest(1, job_id, candidat_id, req.user['user_id'], 0);
+                const interestUpdated = await interest_repository.candidateAnswer(req.body.interest_id, updateInterest, req.params.jobApplied_id);
+                console.log("interestUpdated", interestUpdated);
+
                 return res.status(200).json({
                     success: true,
                     interest: updateInterest,
@@ -74,7 +81,9 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
                 });
             }
 
-            await interest_repository.candidateInterest(req.params.id, req.user['user_id'], "NULL");
+            const candidateNewInterest = await interest_repository.candidateInterest(req.params.jobApplied_id, req.user['user_id'], "NULL");
+            console.log("candidateNewInterest", candidateNewInterest);
+
             res.status(200).json({
                 message: 'Nouvel intérêt enregistré',
             });
@@ -83,25 +92,54 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
         }
 
         else {
-            const interestExists = await interest_repository.getCandidateInterestedByJob(req.params.id, req.body);
 
-            if (interestExists) {
-                const updateInterest = new Interest({
-                    interest: req.body.interest
-                });
-                const interestUpdated = await interest_repository.recruiterAnswer(updateInterest, req.params.id);
-                return res.status(200).json({
-                    success: true,
-                    interest: updateInterest,
-                    data: interestUpdated
-                });
+
+            const job_id = req.body.jobApplied_id;
+            const candidat_id = req.body.candidateWhoApplied_id;
+            const newUser = new Interest(1, job_id, candidat_id, req.user['user_id'], 0);
+            Object.assign(newUser, req.body);
+            await interest_repository.addRecruiterInterest(1, job_id, candidat_id, req.user['user_id']);
+
+
+            const exists = await interest_repository.getCandidateInterestedByJob(job_id, candidat_id);
+
+            console.log("exists is", job_id, candidat_id, req.user['user_id']);
+
+            if (exists) {
+                res.status(400).json({ error: 'User already already taken' });
+                return;
             }
 
-            const newInterest = await interest_repository.recruiterInterest(req.params.id, req.user['user_id'], "NULL");
-            return res.status(200).json({
-                message: 'Nouvel intérêt enregistré',
-                data: newInterest
-            });
+
+
+
+
+            const interestExists = await interest_repository.getCandidateInterestedByJob(req.params.jobApplied_id, req.body);
+            console.log("interest", interestExists);
+
+            //  if (interestExists) {
+            //     const updateInterest = new Interest({
+            //         interest: req.body.interest
+            //     });
+            //     /*                 const interestUpdated = await interest_repository.recruiterAnswer(updateInterest, req.params.jobApplied_id, req.body.interest_id, req.body.candidat_id);
+            //      */
+            //     const interestUpdated = await interest_repository.recruiterAnswer(updateInterest, req.params.jobApplied_id, req.body, req.body);
+            //     console.log("interestUpdated", interestUpdated);
+
+            //     return res.status(200).json({
+            //         success: true,
+            //         interest: updateInterest,
+            //         data: interestUpdated
+            //     });
+            // } 
+
+            // const newInterest = await interest_repository.recruiterInterest(req.params.jobApplied_id, req.body, req.user['user_id'], "NULL");
+            // console.log("newInterest", newInterest);
+
+            // return res.status(200).json({
+            //     message: 'Nouvel intérêt enregistré',
+            //     data: newInterest
+            // });
         }
     }
 
