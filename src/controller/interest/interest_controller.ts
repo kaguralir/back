@@ -7,9 +7,9 @@ import { interest_repository } from "../../repository/interest/interest_reposito
 
 export const InterestController = Router();
 
-InterestController.get('/jobCandidatesWithInterest', async (req, res) => {
+InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('jwt', { session: false }),  async (req, res) => {
     try {
-        const CandidatesWithInterest = await interest_repository.getJobCandidatesWithInterest();
+        const CandidatesWithInterest = await interest_repository.getCandidatesWithInterestByJob(req.user);
 
         return res.status(200).json({
             success: true,
@@ -25,9 +25,9 @@ InterestController.get('/jobCandidatesWithInterest', async (req, res) => {
     }
 });
 
-InterestController.get('/jobCandidatesWithoutInterest', async (req, res) => {
+InterestController.get('/jobCandidatesWithoutInterest/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterest();
+        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(req.user);
 
         return res.status(200).json({
             success: true,
