@@ -9,7 +9,9 @@ export const InterestController = Router();
 
 InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('jwt', { session: false }),  async (req, res) => {
     try {
-        const CandidatesWithInterest = await interest_repository.getCandidatesWithInterestByJob(req.user);
+        console.log("req user is", req.user);
+        
+        const CandidatesWithInterest = await interest_repository.getCandidatesWithInterestByJob(req.params.id);
 
         return res.status(200).json({
             success: true,
@@ -17,7 +19,7 @@ InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('
             data: CandidatesWithInterest
         });
     } catch (err) {
-        console.log(err);
+        console.log("candidate with interest error is",err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
@@ -27,7 +29,7 @@ InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('
 
 InterestController.get('/jobCandidatesWithoutInterest/:id',  passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(req.user);
+        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(req.params.id);
 
         return res.status(200).json({
             success: true,

@@ -60,17 +60,20 @@ export class interest_repository {
     }
 
     static async getCandidatesWithInterestByJob(job_id) {
+        try{
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
-        INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND interest IS NULL AND role="candidat`,[job_id]);
+        INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND interest IS NULL AND role="candidat"`,[job_id]);
 
-        return rows.map(row => new User({
-            user_id: row['user_id']
-        }));
+        return rows}
+        catch(err){
+            console.log("ca interest is error", err);
+            return
+        }
 
     }
 
     static async getJobCandidatesWithoutInterestByJob(job_id) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat"`,[job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat";`,[job_id]);
 
         return rows.map(row => new User({
             user_id: row['user_id']
