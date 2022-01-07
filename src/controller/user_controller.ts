@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { user_repository } from "../repository/user_repository";
-import {User} from '../entity/user_entity';
+import { User } from '../entity/user_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../utils/token";
 import passport from "passport";
@@ -32,8 +32,8 @@ UserController.get('/allCompanies', async (req, res) => {
 UserController.post('/login', async (req, res) => {
     try {
         const user = await user_repository.getUser(req.body.email);
-        
-        
+
+
         if (user) {
             let samePWD = await bcrypt.compare(req.body.password, user.password)
             if (samePWD) {
@@ -86,7 +86,7 @@ UserController.post('/register', async (req, res) => {
 
 
     } catch (error) {
-        console.log("error is",error);
+        console.log("error is", error);
         res.status(500).json(error);
     }
 });
@@ -96,7 +96,7 @@ UserController.get('/account', passport.authenticate('jwt', { session: false }),
 
     res.json(req.user);
     console.log("req user passport", req.user);
-    
+
 });
 
 
