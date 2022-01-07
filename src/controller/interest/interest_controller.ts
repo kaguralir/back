@@ -73,37 +73,49 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
                     data: interestUpdated
                 });
             }
-        }
 
-
-        const likedAlready = await findLikesByUsers(users_id, uploads_id);
-        if (!likedAlready) {
-            const postLike = await postLikes(users_id, uploads_id);
-
-            return resp.status(200).json({
-                success: true,
-                count: postLike,
-                data: postLike
+            await interest_repository.candidateInterest(req.params.id, req.user['user_id'], "NULL");
+            res.status(201).json({
+                message: 'Nouvel intérêt enregistré',
             });
+
+
         }
+
         else {
-            const postLike = await deleteLike(users_id, uploads_id);
+            const interestExists = await interest_repository.getCandidatesWithInterestByJob(req.params.id);
 
-            return resp.status(200).json({
-                success: true,
-                count: postLike,
-                data: postLike
+            if (interestExists) {
+                const updateInterest = new Interest({
+                    interest: req.body.interest
+                });
+                const interestUpdated = await interest_repository.candidateAnswer(updateInterest, req.params.id);
+                return res.status(200).json({
+                    success: true,
+                    interest: updateInterest,
+                    data: interestUpdated
+                });
+            }
+
+            await interest_repository.candidateInterest(req.params.id, req.user['user_id'], "NULL");
+            res.status(201).json({
+                message: 'Nouvel intérêt enregistré',
             });
+
+
         }
+    }
 
 
 
-
-    } catch (error) {
-        console.log(error);
+    catch (error) {
+        console.log("error is", error);
         res.status(500).json(error);
     }
 });
+
+
+
 
 
 
