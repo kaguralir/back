@@ -75,7 +75,7 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
             }
 
             await interest_repository.candidateInterest(req.params.id, req.user['user_id'], "NULL");
-            res.status(201).json({
+            res.status(200).json({
                 message: 'Nouvel intérêt enregistré',
             });
 
@@ -83,13 +83,13 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
         }
 
         else {
-            const interestExists = await interest_repository.getCandidatesWithInterestByJob(req.params.id);
+            const interestExists = await interest_repository.getCandidateInterestedByJob(req.params.id, req.body);
 
             if (interestExists) {
                 const updateInterest = new Interest({
                     interest: req.body.interest
                 });
-                const interestUpdated = await interest_repository.candidateAnswer(updateInterest, req.params.id);
+                const interestUpdated = await interest_repository.recruiterAnswer(updateInterest, req.params.id);
                 return res.status(200).json({
                     success: true,
                     interest: updateInterest,
@@ -97,16 +97,13 @@ InterestController.post('/interestActivity/:id', passport.authenticate('jwt', { 
                 });
             }
 
-            await interest_repository.candidateInterest(req.params.id, req.user['user_id'], "NULL");
-            res.status(201).json({
+            const newInterest = await interest_repository.recruiterInterest(req.params.id, req.user['user_id'], "NULL");
+            return res.status(200).json({
                 message: 'Nouvel intérêt enregistré',
+                data: newInterest
             });
-
-
         }
     }
-
-
 
     catch (error) {
         console.log("error is", error);
