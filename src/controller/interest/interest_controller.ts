@@ -102,7 +102,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             console.log("exists is", jobApplied_id, candidat_id, req.user['user_id']);
             console.log("exists is", exists);
 
-            if (exists.interest_id == undefined) {
+            if (!exists.interest_id) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
                 console.log("recruiter interest", recruiterInterest);
 
@@ -114,9 +114,9 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
             }
 /*             const interest_id = Number(req.params.jobApplied_id)// a revoir
- */            const interest_id = Number(req.body.jobApplied_id)// a revoir
+ */         const interest_id = exists.interest_id// a revoir
 
-            const interest = "";
+            const interest = req.body.interest;
 
             const recruiterAnswer = await interest_repository.recruiterAnswer(interest_id, jobApplied_id, candidat_id, interest);
             console.log("recruiter answer", recruiterAnswer);
