@@ -81,7 +81,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
 
             const interest = req.body.interest;
-            const interestUpdated = await interest_repository.candidateAnswer(interest, interestExists.interest_id, job_id, candidat_id);
+            const interestUpdated = await interest_repository.candidateAnswer(interest, interestExists.interest_id);
             console.log("interestUpdated", interest);
 
             return res.status(200).json({
