@@ -53,7 +53,7 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
 
 
-InterestController.post('/interestActivity/:jobApplied_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+InterestController.post('/interestActivity/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
 
 
@@ -64,14 +64,14 @@ InterestController.post('/interestActivity/:jobApplied_id', passport.authenticat
         const actualRole = req.user['role'];
 
         if (actualRole == "candidat") {
-            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.params.jobApplied_id, req.user['user_id']);
+            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.body.jobApplied_id, req.user['user_id']);
             console.log("interest exists", interestExists);
 
             if (interestExists) {
                 const job_id = req.body.jobApplied_id;
                 const candidat_id = req.body.candidateWhoApplied_id;
                 const updateInterest = new Interest(1, job_id, candidat_id, req.user['user_id'], 0);
-                const interestUpdated = await interest_repository.candidateAnswer(req.body.interest_id, updateInterest, req.params.jobApplied_id);
+                const interestUpdated = await interest_repository.candidateAnswer(req.body.interest_id, updateInterest, req.body.jobApplied_id);
                 console.log("interestUpdated", interestUpdated);
 
                 return res.status(200).json({
@@ -81,7 +81,7 @@ InterestController.post('/interestActivity/:jobApplied_id', passport.authenticat
                 });
             }
 
-            const candidateNewInterest = await interest_repository.candidateInterest(req.params.jobApplied_id, req.user['user_id'], "NULL");
+            const candidateNewInterest = await interest_repository.candidateInterest(req.body.jobApplied_id, req.user['user_id'], "NULL");
             console.log("candidateNewInterest", candidateNewInterest);
 
             res.status(200).json({
@@ -102,8 +102,9 @@ InterestController.post('/interestActivity/:jobApplied_id', passport.authenticat
             console.log("exists is", jobApplied_id, candidat_id, req.user['user_id']);
             console.log("exists is", exists);
 
-            if (exists == []) {
+            if (exists.interest_id == undefined) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
+                console.log("recruiter interest", recruiterInterest);
 
                 return res.status(200).json({
                     success: true,
@@ -112,9 +113,13 @@ InterestController.post('/interestActivity/:jobApplied_id', passport.authenticat
                 });
 
             }
+/*             const interest_id = Number(req.params.jobApplied_id)// a revoir
+ */            const interest_id = Number(req.body.jobApplied_id)// a revoir
 
-            const interestExists = await interest_repository.getCandidateInterestedByJob(req.body.jobApplied_id, req.body);
-            console.log("interest", interestExists);
+            const interest = "";
+
+            const recruiterAnswer = await interest_repository.recruiterAnswer(interest_id, jobApplied_id, candidat_id, interest);
+            console.log("recruiter answer", recruiterAnswer);
 
             //  if (interestExists) {
             //     const updateInterest = new Interest({

@@ -61,7 +61,7 @@ export class interest_repository {
     static async getCandidatesWithInterestByJob(job_id) {
         try {
             const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
-        INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND interest IS NULL AND role="candidat"`, [job_id.jobApplied_id]);
+        INNER JOIN interest WHERE user_id = candidateWhoApplied_id  AND jobApplied_id=? AND interest IS NULL AND role="candidat"`, [job_id.jobApplied_id]);
 
             return rows
         }
@@ -76,17 +76,23 @@ export class interest_repository {
 
     static async getCandidateInterestedByJob(jobApplied_id: number, candidat_id: number) {
         try {
-            const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
-                INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat"`, [jobApplied_id, candidat_id]);
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
+                INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" `, [jobApplied_id, candidat_id]);
 
-            const candidateList = [];
-            for (const row of rows) {
-                let instance = new Interest(row.interest_id, row.jobApplied_id, row.candidateWhoApplied_id, row.recruiterJobOffer_id, row.interest);
-                candidateList.push(instance);
+            /*    const candidateList = [];
+               for (const row of rows) {
+                   let instance = new Interest(row.interest_id, row.jobApplied_id, row.candidateWhoApplied_id, row.recruiterJobOffer_id, row.interest);
+                   candidateList.push(instance);
+   
+               }
+               return candidateList; */
+            /*  return row; */
 
-            }
+            /*             return row.map(item => new Interest(item['interest_id'], item['jobApplied_id'], item['candidateWhoApplied_id'], item['recruiterJobOffer_id'], item['interest']));
+             */
+            console.log("row", row);
 
-            return candidateList;
+            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
 
         }
