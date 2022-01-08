@@ -10,11 +10,11 @@ export class interest_repository {
      * @returns {Promise<Interest[]>} 
      */
 
-    static async candidateInterest(job_id, candidate_id, candidateApplication) {
+    static async candidateInterest(job_id: number, candidate_id: number) {
         try {
-            const [addedApplication] = await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)',
-                [job_id.jobApplied_id, candidate_id.candidateWhoApplied_id]);
-            candidateApplication.interest_id = addedApplication.insertId;
+            await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)',
+                [job_id, candidate_id]);
+
         }
         catch (err) {
             console.log("add application repo err is", err)
@@ -101,7 +101,7 @@ export class interest_repository {
             return
         }
     }
-    static async getJobCandidatesWithoutInterestByJob(job_id) {
+    static async getJobCandidatesWithoutInterestByJob(job_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat"`, [job_id]);
 
         return rows.map(row => new User({
@@ -112,9 +112,12 @@ export class interest_repository {
 
 
     static async getInterestedRecruiterPerJob(job_id: number, candidat_id: number) {
-        const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NULL`, [job_id, candidat_id]);
+        const row = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NULL`, [job_id, candidat_id]);
 
-        console.log("row", row);
+        console.log("row getInterestedRecruiterPerJob", row);
+
+        /*         return new Interest(row['interest_id'], row['jobApplied_id'], row['candidateWhoApplied_id'], row['recruiterJobOffer_id'], row['interest']);
+         */
 
         return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 

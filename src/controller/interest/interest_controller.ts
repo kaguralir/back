@@ -31,7 +31,7 @@ InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('
 
 InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(req.params.id);
+        const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(Number(req.params.id));
 
         return res.status(200).json({
             success: true,
@@ -55,36 +55,36 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
 InterestController.post('/interestActivity/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-
-
-
-
-        console.log("req user is", (req.user['role']));
-        console.log("req user is", (req.user['user_id']));
         const actualRole = req.user['role'];
 
         if (actualRole == "candidat") {
-            const interestExists = await interest_repository.getInterestedRecruiterPerJob(req.body.jobApplied_id, req.user['user_id']);
-            console.log("interest exists", interestExists);
+            const job_id = req.body.jobApplied_id;
+            const candidat_id = req.user['user_id'];
+            const interestExists = await interest_repository.getInterestedRecruiterPerJob(job_id, candidat_id);
+            console.log("interest exists", interestExists.candidateWhoApplied_id);
 
-            if (interestExists.interest_id) {
-                const job_id = req.body.jobApplied_id;
-                const candidat_id = req.body.candidateWhoApplied_id;
-                const interest = req.body.candidatAnswer;
-                const interestUpdated = await interest_repository.candidateAnswer(interestExists.interest_id, job_id, candidat_id, interest);
-                console.log("interestUpdated", interestUpdated);
+
+            if (!interestExists.recruiterJobOffer_id) {
+                const candidateNewInterest = await interest_repository.candidateInterest(job_id, candidat_id);
 
                 return res.status(200).json({
                     success: true,
-                    data: interestUpdated
+                    message: 'Nouvel intérêt candidat enregistré',
+                    data: candidateNewInterest
                 });
+
+
             }
 
-            const candidateNewInterest = await interest_repository.candidateInterest(req.body.jobApplied_id, req.user['user_id'], "NULL");
-            console.log("candidateNewInterest", candidateNewInterest);
 
-            res.status(200).json({
-                message: 'Nouvel intérêt enregistré',
+            const interest = req.body.candidatAnswer;
+            const interestUpdated = await interest_repository.candidateAnswer(interestExists.interest_id, job_id, candidat_id, interest);
+            console.log("interestUpdated", interestUpdated);
+
+            return res.status(200).json({
+                success: true,
+                message: "Réponse du candidat enregistré",
+                data: interestUpdated
             });
 
 
