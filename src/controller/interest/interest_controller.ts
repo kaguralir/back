@@ -94,27 +94,26 @@ InterestController.post('/interestActivity/:jobApplied_id', passport.authenticat
         else {
 
 
-            const job_id = req.body.jobApplied_id;
+            const jobApplied_id = req.body.jobApplied_id;
             const candidat_id = req.body.candidateWhoApplied_id;
-            const newUser = new Interest(1, job_id, candidat_id, req.user['user_id'], 0);
-            Object.assign(newUser, req.body);
-            await interest_repository.addRecruiterInterest(1, job_id, candidat_id, req.user['user_id']);
 
+            const exists = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
 
-            const exists = await interest_repository.getCandidateInterestedByJob(job_id, candidat_id);
+            console.log("exists is", jobApplied_id, candidat_id, req.user['user_id']);
+            console.log("exists is", exists);
 
-            console.log("exists is", job_id, candidat_id, req.user['user_id']);
+            if (exists == []) {
+                const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
 
-            if (exists) {
-                res.status(400).json({ error: 'User already already taken' });
-                return;
+                return res.status(200).json({
+                    success: true,
+                    count: recruiterInterest,
+                    data: recruiterInterest
+                });
+
             }
 
-
-
-
-
-            const interestExists = await interest_repository.getCandidateInterestedByJob(req.params.jobApplied_id, req.body);
+            const interestExists = await interest_repository.getCandidateInterestedByJob(req.body.jobApplied_id, req.body);
             console.log("interest", interestExists);
 
             //  if (interestExists) {

@@ -1,6 +1,30 @@
 
 export class Interest {
 
+
+    constructor(public interest_id: number, public jobApplied_id: number, public candidateWhoApplied_id: number, public recruiterJobOffer_id: number, public interest: number) {
+
+    }
+}
+
+/* export class Interest {
+    interest_id: number;
+    jobApplied_id: number;
+    candidateWhoApplied_id: number;
+    recruiterJobOffer_id: number;
+    interest: number;
+    constructor(interest_id: number, jobApplied_id: number, candidateWhoApplied_id: number, recruiterJobOffer_id: number, interest: number) {
+        this.interest_id = interest_id;
+        this.jobApplied_id = jobApplied_id;
+        this.candidateWhoApplied_id = candidateWhoApplied_id;
+        this.recruiterJobOffer_id = recruiterJobOffer_id;
+        this.interest = interest;
+    }
+
+} */
+
+/* export class Interest {
+
     public interest_id :number;
     public jobApplied_id : number;
     public candidateWhoApplied_id: number;
@@ -11,6 +35,7 @@ export class Interest {
         Object.assign(this, params);
     }
 }
+ */
 
 
 
