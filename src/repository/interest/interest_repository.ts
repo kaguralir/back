@@ -12,8 +12,12 @@ export class interest_repository {
 
     static async candidateInterest(job_id: number, candidate_id: number) {
         try {
-            await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)',
-                [job_id, candidate_id]);
+            /*     await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)',
+                    [job_id, candidate_id]); //work*/
+
+            const [rows] = await connection.query<ResultSetHeader>(
+                `INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)`,
+                [job_id, candidate_id]);//works too
 
         }
         catch (err) {
@@ -23,11 +27,13 @@ export class interest_repository {
     }
 
 
-    static async candidateAnswer(interest_id: number, job_id: number, candidate_id: number, answer: number) {
+    static async candidateAnswer(answer: number, interest_id: number, job_id: number, candidate_id: number) {
         try {
-            const [addedApplication] = await connection.execute<ResultSetHeader>('UPDATE interest SET interest = ?  WHERE candidateWhoApplied_id=? AND recruiterJobOffer_id=? AND interest=NULL',
-                [interest_id, job_id, candidate_id, answer]);
-            interest_id = addedApplication.insertId;
+            const [addedApplication] = await connection.query<ResultSetHeader>('UPDATE interest SET interest = ?  WHERE candidateWhoApplied_id=? AND recruiterJobOffer_id=? AND interest=NULL',
+                [answer, interest_id, job_id, candidate_id]);
+
+            console.log('candidate answer', addedApplication);
+
         }
         catch (err) {
             console.log("add application repo err is", err)
@@ -112,14 +118,22 @@ export class interest_repository {
 
 
     static async getInterestedRecruiterPerJob(job_id: number, candidat_id: number) {
-        const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NULL`, [job_id, candidat_id]);
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NULL`, [job_id, candidat_id]);
+            /* 
+                    console.log("row getInterestedRecruiterPerJob", row); */
 
-        console.log("row getInterestedRecruiterPerJob", row);
+            /*         return new Interest(row['interest_id'], row['jobApplied_id'], row['candidateWhoApplied_id'], row['recruiterJobOffer_id'], row['interest']);
+             */
+            console.log(row);
 
-        /*         return new Interest(row['interest_id'], row['jobApplied_id'], row['candidateWhoApplied_id'], row['recruiterJobOffer_id'], row['interest']);
-         */
 
-        return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+        }
+        catch (err) {
+            console.log("get interest recruiter error", err);
+
+        }
 
     }
 }

@@ -61,10 +61,11 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const job_id = req.body.jobApplied_id;
             const candidat_id = req.user['user_id'];
             const interestExists = await interest_repository.getInterestedRecruiterPerJob(job_id, candidat_id);
-            console.log("interest exists", interestExists.candidateWhoApplied_id);
 
 
-            if (!interestExists.recruiterJobOffer_id) {
+            /*             if (interestExists.recruiterJobOffer_id == null) {
+             */
+            if (!interestExists) {
                 const candidateNewInterest = await interest_repository.candidateInterest(job_id, candidat_id);
 
                 return res.status(200).json({
@@ -75,11 +76,13 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
 
             }
+            console.log("interest exists", interestExists.candidateWhoApplied_id);
+            console.log("interest", interestExists);
 
 
-            const interest = req.body.candidatAnswer;
-            const interestUpdated = await interest_repository.candidateAnswer(interestExists.interest_id, job_id, candidat_id, interest);
-            console.log("interestUpdated", interestUpdated);
+            const interest = req.body.interest;
+            const interestUpdated = await interest_repository.candidateAnswer(interest, interestExists.interest_id, job_id, candidat_id);
+            console.log("interestUpdated", interest);
 
             return res.status(200).json({
                 success: true,
