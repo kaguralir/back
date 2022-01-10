@@ -63,43 +63,15 @@ CREATE TABLE jobOffers(
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-DROP TABLE IF EXISTS candidatThumbsActivity;
-CREATE TABLE candidatThumbsActivity(
-  thumb_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  candidat_id INTEGER(100),
-  CONSTRAINT FK_candidatThumb_id FOREIGN KEY (candidat_id) REFERENCES user(user_id),
-  jobThumbActivity_id INTEGER(100),
-  CONSTRAINT FK_jobThumbActivity_id FOREIGN KEY (jobThumbActivity_id) REFERENCES jobOffers(jobOffer_id),
-  candidatThumbStatus TINYINT(1)
-);
-DROP TABLE IF EXISTS recruiterThumbsActivity;
-CREATE TABLE recruiterThumbsActivity(
-  thumb_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  recruiterThumb_id INTEGER(100),
-  CONSTRAINT FK_recruiterThumb_id FOREIGN KEY (recruiterThumb_id) REFERENCES jobOffers(recruiter_id),
-  candidat_id INTEGER(100),
-  CONSTRAINT FK_candidatLiked_id FOREIGN KEY (candidat_id) REFERENCES user(user_id),
-  recruiterThumbStatus TINYINT(1)
-);
-DROP TABLE IF EXISTS mutualThumbsUp;
-CREATE TABLE mutualThumbsUp(
-  mutualThumbsUp_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  mutualRecruiter_id INTEGER (100),
-  CONSTRAINT FK_mutualRecruiter_id FOREIGN KEY (mutualRecruiter_id) REFERENCES recruiterThumbsActivity(recruiterThumb_id),
-  mutualCandidate_id INTEGER (100),
-  CONSTRAINT FK_mutualCandidate_id FOREIGN KEY (mutualCandidate_id) REFERENCES candidatThumbsActivity(candidat_id)
-);
+
 
 
 DROP TABLE IF EXISTS conversations;
 CREATE TABLE conversations(
   conversation_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  mutualThumbsUp_id INTEGER(100),
-  CONSTRAINT FK_mutualThumbsUp_id FOREIGN KEY (mutualThumbsUp_id) REFERENCES mutualThumbsUp(mutualThumbsUp_id),
-  recruiterMessaging_id INTEGER(100),
-  CONSTRAINT FK_recruiterMessaging_id  FOREIGN KEY (recruiterMessaging_id) REFERENCES mutualThumbsUp(mutualRecruiter_id),
-  candidateMessaging_id INTEGER(100),
-  CONSTRAINT FK_candidateMessaging_id FOREIGN KEY (candidateMessaging_id) REFERENCES mutualThumbsUp(mutualCandidate_id),
+  mutualInterest_id INTEGER(100),
+  CONSTRAINT FK_mutualInterest_id FOREIGN KEY (mutualInterest_id) REFERENCES interest(interest_id),
+  sender_id INTEGER(100),
   messageSend VARCHAR(1000),
   sendDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

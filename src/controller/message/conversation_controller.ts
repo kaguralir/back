@@ -1,18 +1,19 @@
 import { Router } from "express";
 import { jobOffers_repository } from "../../repository/recruiter/jobOffers_repository";
-import {JobOffers} from '../../entity/recruiter/jobOffers_entity';
+import { JobOffers } from '../../entity/recruiter/jobOffers_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../../utils/token"
 import { conversations_repository } from "../../repository/message/conversation_repository";
 import { Conversations } from "../../entity/message/conversations_entity";
+import { interest_repository } from "../../repository/interest/interest_repository";
 
 
 
 export const ConversationsController = Router();
 
-ConversationsController.get('/convoPerMatch', async (req, res) => {
+ConversationsController.get('/convoPerInterest', async (req, res) => {
     try {
         const convo = await conversations_repository.getAllMessagesPerMutualInterest(req.body);
 
@@ -21,7 +22,7 @@ ConversationsController.get('/convoPerMatch', async (req, res) => {
             data: convo
         });
     } catch (err) {
-        console.log("err get all jobs is",err);
+        console.log("err  is", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
@@ -31,19 +32,16 @@ ConversationsController.get('/convoPerMatch', async (req, res) => {
 
 
 
-ConversationsController.post('/addMessage', passport.authenticate('jwt', { session: false }), async (req, res) => {
+ConversationsController.post('/addMessage/:interest_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const newMessage = new Conversations(req.body);
-       /*  console.log("send data user id is ", req.user);
-        console.log("req user is", req.user); */
-        
-        await conversations_repository.addMessage(newMessage,req.user, req.user,req.user);
+        const newMessage = req.body.messageSend;
+        await conversations_repository.addMessage(Number(req.params.interest_id), req.user['user_id'], newMessage);
         res.status(201).json({
             success: true,
             data: newMessage
-            })
-        
-    } 
+        })
+
+    }
     catch (error) {
         console.log(error);
         res.status(500).json(error);

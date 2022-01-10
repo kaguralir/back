@@ -1,4 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { Interest } from "../../entity/interest/interest_entity";
 import { Conversations } from "../../entity/message/conversations_entity";
 import { connection } from "../connection";
 
@@ -9,23 +10,42 @@ export class conversations_repository {
      * @returns {Promise<Conversation[]>} 
      */
 
-    static async getAllMessagesPerMutualInterest(mutual:number) {
-        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualThumbsUp=?', [mutual]);
+    static async getAllMessagesPerMutualInterest(mutual: number) {
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualInterest_id=?', [mutual]);
         if (rows.length === 1) {
-            return new Conversations({conversation_id:rows[0].conversation_id, mutualThumbsUp_id:rows[0]. mutualThumbsUp_id, recruiterMessaging_id: rows[0].recruiterMessaging_id, candidateMessaging_id: rows[0].candidateMessaging_id, messageSend: rows[0].messageSend,sendDate: rows[0].sendDate
+            return new Conversations({
+                conversation_id: rows[0].conversation_id, mutualThumbsUp_interest: rows[0].mutualTInterest_id, sender_id: rows[0].sender_id, messageSend: rows[0].messageSend, sendDate: rows[0].sendDate
             });
         }
         return null;
 
     }
 
-    static async addMessage(message:Conversations,  mutualityId,recruiterId, candidatId) {
-        try{
-        const [addedMessage] = await connection.query<ResultSetHeader>('INSERT INTO conversations (mutualThumbsUp_id, recruiterMessaging_id, candidateMessaging_id, email,password, messageSend, sendDates) VALUES (?,?,?,?,?)', [mutualityId.mutualThumbsUp_id,recruiterId.recruiterMessaging_id,candidatId.candidateMessaging_id,message.messageSend,message.sendDate]);
-         message.conversation_id = addedMessage.insertId;
-    }
-        catch(err){
+    static async addMessage(mutualInterest_id: number, sender_id: number, message: String) {
+        try {
+            await connection.query<ResultSetHeader>('INSERT INTO conversations (mutualInterest_id, sender_id,messageSend) VALUES (?,?,?)', [mutualInterest_id, sender_id, message]);
+        }
+        catch (err) {
             console.log("adduser repo err is", err)
+        }
+
+    }
+
+    static async getOneMutualInterest( interest_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE interest_id = ?  AND interest=1`, [interest_id]);
+
+            console.log(row);
+
+            if (row.length === 1) {
+                return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+
+            }
+            return null;
+        }
+        catch (err) {
+            console.log(" get one mutual Interest error", err);
+
         }
 
     }
