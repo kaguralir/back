@@ -29,7 +29,7 @@ export class interest_repository {
 
     static async candidateAnswer(answer: number, interest_id: number) {
         try {
-            const [addedApplication] = await connection.query<ResultSetHeader>('UPDATE interest SET interest = ?  WHERE interest_id=?',
+            const [addedApplication] = await connection.query<ResultSetHeader>('UPDATE interest SET interest = ?  WHERE interest_id=? AND recruiterJobOffer_id IS NOT NULL ',
                 [answer, interest_id]);
 
             console.log('candidate answer', addedApplication);

@@ -76,17 +76,25 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
 
             }
-            console.log("interest exists", interestExists.candidateWhoApplied_id);
-            console.log("interest", interestExists);
+            if (interestExists) { //answerExists
+                const interest = req.body.interest;// à revoir: comment déterminer si l'intérêt est bien celui d'une réponse déjà envoyé?
+                const candidateNewInterest = await interest_repository.updateCandidateAnswer(interestExists.interest_id, job_id, candidat_id, interest);
 
+                return res.status(200).json({
+                    success: true,
+                    message: 'Réponse du candidat mise à jour ',
+                    data: candidateNewInterest
+                });
+
+            }
 
             const interest = req.body.interest;
             const interestUpdated = await interest_repository.candidateAnswer(interest, interestExists.interest_id);
-            console.log("interestUpdated", interest);
+
 
             return res.status(200).json({
                 success: true,
-                message: "Réponse du candidat enregistré",
+                message: "Réponse du candidat enregistré ",
                 data: interestUpdated
             });
 
@@ -99,24 +107,39 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const jobApplied_id = req.body.jobApplied_id;
             const candidat_id = req.body.candidateWhoApplied_id;
 
-            const exists = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
+            const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
 
-            console.log("exists is", jobApplied_id, candidat_id, req.user['user_id']);
-            console.log("exists is", exists);
+            console.log("sent data is", jobApplied_id, candidat_id, req.user['user_id']);
+            console.log("candidateInterest is", candidateInterest);
 
-            if (!exists) {
+            if (!candidateInterest) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
                 console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
 
                 return res.status(200).json({
                     success: true,
-                    count: recruiterInterest,
+                    message: 'Nouvel intérêt recruteur enregistré',
                     data: recruiterInterest
                 });
 
             }
+
+            const recruiterInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
+
+            if (!candidateInterest) {
+                const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
+                console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
+
+                return res.status(401).json({
+                    success: true,
+                    message: 'Intérêt recruteur pour ce candidat sur cette offre existe déjà',
+                    data: recruiterInterest
+                });
+
+            }
+
 /*             const interest_id = Number(req.params.jobApplied_id)// a revoir
- */         const interest_id = exists.interest_id// a revoir
+ */         const interest_id = candidateInterest.interest_id// a revoir
 
             const interest = req.body.interest;
 
@@ -131,6 +154,31 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
         res.status(500).json(error);
     }
 });
+
+
+InterestController.delete('/interestActivity/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const actualRole = req.user['role'];
+
+        if (actualRole == "candidat") {
+
+            await interest_repository.deleteCandidateInterest(Number(req.params.id), req.user['user_id']);
+            res.end();
+        }
+
+        else {
+
+            await interest_repository.deleteRecruiterInterest(Number(req.params.id), req.user['user_id']);
+            res.end();
+        }
+    }
+
+    catch (error) {
+        console.log("error is", error);
+        res.status(500).json(error);
+    }
+});
+
 
 
 
