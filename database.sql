@@ -63,9 +63,6 @@ CREATE TABLE jobOffers(
   createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-
-
 DROP TABLE IF EXISTS conversations;
 CREATE TABLE conversations(
   conversation_id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -75,15 +72,31 @@ CREATE TABLE conversations(
   messageSend VARCHAR(1000),
   sendDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-
 DROP TABLE IF EXISTS interest;
 CREATE TABLE interest(
   interest_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  jobApplied_id  INTEGER(100) NULL,
+  jobApplied_id INTEGER(100) NULL,
   CONSTRAINT FK_jobApplied_id FOREIGN KEY (jobApplied_id) REFERENCES jobOffers(jobOffer_id),
   candidateWhoApplied_id INTEGER(100),
   CONSTRAINT FK_candidateWhoApplied_id FOREIGN KEY (candidateWhoApplied_id) REFERENCES user(user_id),
-  recruiterJobOffer_id  INTEGER(100)NULL,
-  interest  TINYINT(1) NULL
+  recruiterJobOffer_id INTEGER(100) NULL,
+  interest TINYINT(1) NULL
+);
+DROP TABLE IF EXISTS kanbanRecruiter;
+CREATE TABLE kanbanRecruiter(
+  kanbanRecruiter_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  mutual_interest_id INTEGER(100),
+  CONSTRAINT FK_mutual_interest_id FOREIGN KEY (mutual_interest_id) REFERENCES interest(interest_id),
+  interview_id INTEGER(100),
+  candidateProgress VARCHAR(100)
+);
+DROP TABLE IF EXISTS interviews;
+CREATE TABLE interviews(
+  interviews_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  interviewOnKanban_id INTEGER(100),
+  CONSTRAINT FK_interviewOnKanban_id  FOREIGN KEY (interviewOnKanban_id) REFERENCES kanbanRecruiter(kanbanRecruiter_id),
+  mode VARCHAR(100),
+  note VARCHAR(100),
+  pickedDate DATE,
+  pickedTime TIME
 );
