@@ -127,17 +127,6 @@ export class interest_repository {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
                 INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" AND recruiterJobOffer_id IS NULL `, [jobApplied_id, candidat_id]);
 
-            /*    const candidateList = [];
-               for (const row of rows) {
-                   let instance = new Interest(row.interest_id, row.jobApplied_id, row.candidateWhoApplied_id, row.recruiterJobOffer_id, row.interest);
-                   candidateList.push(instance);
-   
-               }
-               return candidateList; */
-            /*  return row; */
-
-            /*             return row.map(item => new Interest(item['interest_id'], item['jobApplied_id'], item['candidateWhoApplied_id'], item['recruiterJobOffer_id'], item['interest']));
-             */
             console.log("row", row);
 
             return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
@@ -174,6 +163,38 @@ export class interest_repository {
         }
         catch (err) {
             console.log("get interest recruiter error", err);
+
+        }
+
+    }
+
+    static async getCandidatAnswer(job_id: number, candidat_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NOT NULL`, [job_id, candidat_id]);
+
+            console.log(row);
+
+
+            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+        }
+        catch (err) {
+            console.log("getCandidatAnswer", err);
+
+        }
+
+    }
+
+    static async getRecruiterAnswer(job_id: number, recruiter_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=recruiterJobOffer_id WHERE jobApplied_id =?  AND  recruiterJobOffer_id=? AND recruiterJobOffer_id IS NULL AND interest IS NOT NULL`, [job_id, recruiter_id]);
+
+            console.log(row);
+
+
+            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+        }
+        catch (err) {
+            console.log(" getRecruiterAnswer error", err);
 
         }
 
