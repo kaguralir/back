@@ -104,19 +104,6 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const recruiter_id = req.user['user_id']
 
             const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
-
-            if (!candidateInterest) {
-                const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
-                console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
-
-                return res.status(200).json({
-                    success: true,
-                    message: 'Nouvel intérêt recruteur enregistré',
-                    data: recruiterInterest
-                });
-
-            }
-
             const recruiterInterest = await interest_repository.getRecruiterAnswer(jobApplied_id, recruiter_id);
             const interestId = recruiterInterest.interest_id;
 
@@ -131,6 +118,18 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
                 });
 
             }
+            if (!candidateInterest) {
+                const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
+                console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Nouvel intérêt recruteur enregistré',
+                    data: recruiterInterest
+                });
+
+            }
+
 
 /*             const interest_id = Number(req.params.jobApplied_id)// a revoir
  */         const interest_id = candidateInterest.interest_id// a revoir
