@@ -127,7 +127,7 @@ export class interest_repository {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
                 INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" AND recruiterJobOffer_id IS NULL `, [jobApplied_id, candidat_id]);
 
-            console.log("row", row);
+            console.log("getCandidateInterestedByJob", row);
 
             return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
@@ -184,9 +184,9 @@ export class interest_repository {
 
     }
 
-    static async getRecruiterAnswer(job_id: number, recruiter_id: number) {
+    static async getRecruiterAnswer(job_id: number, candidat_id: number) {
         try {
-            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=recruiterJobOffer_id WHERE jobApplied_id =?  AND  recruiterJobOffer_id=? AND recruiterJobOffer_id IS NULL AND interest IS NOT NULL`, [job_id, recruiter_id]);
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM joboffers JOIN interest ON joboffer_id=jobApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NULL AND interest IS NOT NULL`, [job_id, candidat_id]);
 
             console.log(row);
 

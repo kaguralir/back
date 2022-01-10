@@ -73,7 +73,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const answerExists = await interest_repository.getCandidatAnswer(job_id, candidat_id);
             if (answerExists) { //answerExists
                 const interest = req.body.interest;// à revoir: comment déterminer si l'intérêt est bien celui d'une réponse déjà envoyé?
-                const candidateNewInterest = await interest_repository.updateCandidateAnswer(interestExists.interest_id, job_id, candidat_id, interest);
+                const candidateNewInterest = await interest_repository.updateCandidateAnswer(answerExists.interest_id, job_id, candidat_id, interest);
 
                 return res.status(200).json({
                     success: true,
@@ -104,7 +104,9 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const recruiter_id = req.user['user_id']
 
             const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
-            const recruiterInterest = await interest_repository.getRecruiterAnswer(jobApplied_id, recruiter_id);
+            console.log("candidate interest", candidateInterest);
+
+            const recruiterInterest = await interest_repository.getRecruiterAnswer(jobApplied_id, candidat_id);
             const interestId = recruiterInterest.interest_id;
 
             if (recruiterInterest) {
@@ -118,6 +120,8 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
                 });
 
             }
+
+
             if (!candidateInterest) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
                 console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
@@ -131,9 +135,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             }
 
 
-/*             const interest_id = Number(req.params.jobApplied_id)// a revoir
- */         const interest_id = candidateInterest.interest_id// a revoir
-
+            const interest_id = candidateInterest.interest_id// ?
             const interest = req.body.interest;
 
             const recruiterAnswer = await interest_repository.recruiterAnswer(interest_id, jobApplied_id, candidat_id, interest);
@@ -143,7 +145,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
     }
 
     catch (error) {
-        console.log("error is", error);
+        console.log("error interest controller is", error);
         res.status(500).json(error);
     }
 });
