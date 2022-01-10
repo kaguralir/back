@@ -128,8 +128,11 @@ export class interest_repository {
                 INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" AND recruiterJobOffer_id IS NULL `, [jobApplied_id, candidat_id]);
 
             console.log("getCandidateInterestedByJob", row);
+            if (row.length === 1) {
+                return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
-            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+            }
+            return null;
 
 
         }
@@ -156,10 +159,12 @@ export class interest_repository {
 
             /*         return new Interest(row['interest_id'], row['jobApplied_id'], row['candidateWhoApplied_id'], row['recruiterJobOffer_id'], row['interest']);
              */
-            console.log(row);
 
+            if (row.length === 1) {
+                return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
-            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+            }
+            return null;
         }
         catch (err) {
             console.log("get interest recruiter error", err);
@@ -174,8 +179,11 @@ export class interest_repository {
 
             console.log(row);
 
+            if (row.length === 1) {
+                return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
-            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+            }
+            return null;
         }
         catch (err) {
             console.log("getCandidatAnswer", err);
@@ -190,8 +198,11 @@ export class interest_repository {
 
             console.log(row);
 
+            if (row.length === 1) {
+                return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
-            return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
+            }
+            return null;
         }
         catch (err) {
             console.log(" getRecruiterAnswer error", err);

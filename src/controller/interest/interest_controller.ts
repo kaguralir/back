@@ -106,10 +106,11 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
             console.log("candidate interest", candidateInterest);
 
-            const recruiterInterest = await interest_repository.getRecruiterAnswer(jobApplied_id, candidat_id);
-            const interestId = recruiterInterest.interest_id;
+            const recruiterAlreadyAnswer = await interest_repository.getRecruiterAnswer(jobApplied_id, candidat_id);
 
-            if (recruiterInterest) {
+
+            if (recruiterAlreadyAnswer) {
+                const interestId = recruiterAlreadyAnswer.interest_id;
                 const interest = req.body.interest;
                 const recruiterInterest = await interest_repository.updateRecruiterAnswer(interestId, jobApplied_id, candidat_id, recruiter_id, interest);
 
@@ -139,7 +140,11 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             const interest = req.body.interest;
 
             const recruiterAnswer = await interest_repository.recruiterAnswer(interest_id, jobApplied_id, candidat_id, interest);
-            console.log("recruiter answer", recruiterAnswer);
+            return res.status(200).json({
+                success: true,
+                message: 'Réponse du recruteur enregistré',
+                data: recruiterAnswer
+            });
 
         }
     }
@@ -163,7 +168,7 @@ InterestController.delete('/interestActivity/:id', passport.authenticate('jwt', 
 
         else {
 
-            await interest_repository.deleteRecruiterInterest(Number(req.params.id), req.user['user_id']);
+            await interest_repository.deleteRecruiterInterest(Number(req.params.id), req.user['user_id']);//rajouter candidat
             res.end();
         }
     }
