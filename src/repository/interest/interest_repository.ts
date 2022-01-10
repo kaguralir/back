@@ -41,25 +41,67 @@ export class interest_repository {
 
     }
 
+    static async updateCandidateAnswer(interest_id: number, job_id: number, candidate_id: number, interest: number) {
+        try {
+            const [updateCandidateAnswer] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest =? WHERE interest_id=? AND jobApplied_id=? AND candidateWhoApplied_id=? AND recruiterJobOffer_id IS NULL`, [interest_id, job_id, candidate_id, interest]);
 
+        }
+        catch (err) {
+            console.log("updateCandidateAnswer repo err is", err)
+        }
 
+    }
 
+    static async deleteCandidateInterest(interest_id: number, candidat_id: number) {
+        try {
+            await connection.query('DELETE FROM interest WHERE interest_id=? AND candidateWhoApplied_id=? AND recruiterJobOffer_id IS NULL', [interest_id, candidat_id]);
+        }
+        catch (err) {
+            console.log("deleteCandidateInterest repo err is", err)
+        }
 
-    static async recruiterInterest(job_id, candidat_id, recruiter_id) {
-
-        await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id) VALUES (?,?,?)`, [job_id.jobApplied_id, candidat_id.candidateWhoApplied_id, recruiter_id.recruiterJobOffer_id]);
     }
 
 
 
 
-    static async recruiterAnswer(interest_id, job_id, candidate_id, interest) {
+
+    static async recruiterInterest(job_id: number, candidat_id: number, recruiter_id: number) {
+
+        await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id) VALUES (?,?,?)`, [job_id, candidat_id, recruiter_id]);
+    }
+
+
+
+
+    static async recruiterAnswer(interest_id: number, job_id: number, candidate_id: number, interest: number) {
         try {
-            const [addedUser] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest =? WHERE interest_id=? AND jobApplied_id=? AND candidateWhoApplied_id=?`, [interest_id.interest_id, job_id.jobApplied_id, candidate_id.candidateWhoApplied_id, interest.interest]);
-            interest_id.interest_id = addedUser.insertId;
+            const [addedUser] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest =? WHERE interest_id=? AND jobApplied_id=? AND candidateWhoApplied_id=?`, [interest_id, job_id, candidate_id, interest]);
+
         }
         catch (err) {
             console.log("recruiterAnswer repo err is", err)
+        }
+
+    }
+
+    static async updateRecruiterAnswer(interest_id: number, job_id: number, candidate_id: number, recruiterJobOffer_id: number, interest: number) {
+        try {
+            const [addedUser] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest =? WHERE interest_id=? AND jobApplied_id=? AND candidateWhoApplied_id=? AND recruiterJobOffer_id=?`, [interest_id, job_id, candidate_id, recruiterJobOffer_id, interest]);
+
+        }
+        catch (err) {
+            console.log("updateRecruiterAnswer repo err is", err)
+        }
+
+    }
+
+    static async deleteRecruiterInterest(interest_id: number, recruiterJobOffer_id: number) {
+        try {
+            await connection.query('DELETE FROM interest WHERE interest_id=? AND recruiterJobOffer_id=?', [interest_id, recruiterJobOffer_id]);
+        }
+        catch (err) {
+            console.log("deleteRecruiterInterest repo err is", err)
         }
 
     }
@@ -72,7 +114,7 @@ export class interest_repository {
             return rows
         }
         catch (err) {
-            console.log("ca interest is error", err);
+            console.log("getCandidatesWithInterestByJob is error", err);
             return
         }
     }
@@ -83,7 +125,7 @@ export class interest_repository {
     static async getCandidateInterestedByJob(jobApplied_id: number, candidat_id: number) {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user 
-                INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" `, [jobApplied_id, candidat_id]);
+                INNER JOIN interest WHERE user_id = candidateWhoApplied_id AND jobApplied_id=? AND candidateWhoApplied_id=? AND interest IS NULL AND role="candidat" AND recruiterJobOffer_id IS NULL `, [jobApplied_id, candidat_id]);
 
             /*    const candidateList = [];
                for (const row of rows) {
@@ -103,7 +145,7 @@ export class interest_repository {
 
         }
         catch (err) {
-            console.log("ca interest is error", err);
+            console.log("getCandidateInterestedByJob is error", err);
             return
         }
     }
@@ -136,6 +178,8 @@ export class interest_repository {
         }
 
     }
+
+
 }
 
 

@@ -104,9 +104,9 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
             console.log("exists is", jobApplied_id, candidat_id, req.user['user_id']);
             console.log("exists is", exists);
 
-            if (!exists.interest_id) {
+            if (!exists) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
-                console.log("recruiter interest", recruiterInterest);
+                console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
 
                 return res.status(200).json({
                     success: true,
