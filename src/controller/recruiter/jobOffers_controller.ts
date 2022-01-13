@@ -51,3 +51,45 @@ JobOffersController.post('/addJob', passport.authenticate('jwt', { session: fals
 });
 
 
+JobOffersController.get('/getJobs', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+    try {
+        
+        const candidate_id = req.user['user_id'];
+        const post = await jobOffers_repository.getJobs(candidate_id);
+
+        return res.status(200).json({
+            success: true,
+            count: post.length,
+            data: post
+        });
+    } catch (err) {
+        console.log("err getjobs is",err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+JobOffersController.get('/getCandidates', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+        const recruiter_id = req.user['user_id']
+        if(recruiter_id){
+            const post = await jobOffers_repository.getCandidate(recruiter_id);
+
+            return res.status(200).json({
+                success: true,
+                count: post.length,
+                data: post
+            });
+        }
+      
+    } catch (err) {
+        console.log("err getjobs is",err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});

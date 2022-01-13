@@ -10,6 +10,7 @@ import { configurePassport } from "../../utils/token"
 export const UserController = Router();
 
 UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
+console.log("req user account", req.user);
 
     res.json(req.user);
 
