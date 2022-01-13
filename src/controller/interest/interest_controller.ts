@@ -39,7 +39,7 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
             data: jobCandidatesWithoutInterest
         });
     } catch (err) {
-        console.log(err);
+        console.log("err", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
