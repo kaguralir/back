@@ -7,7 +7,7 @@ import { configurePassport } from './utils/token'
 import passport from 'passport';
 
 export const server = express();
-configurePassport();
+/* configurePassport(); */
 server.use(passport.initialize());
 server.use(express.static('public'));
 server.use(express.json());

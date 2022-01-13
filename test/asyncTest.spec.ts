@@ -2,11 +2,11 @@
 
 const axios = require('axios')
 const fetchData = async (id) => {
-    console.log('called');
+
     const results = await axios.get(
         `https://my-json-server.typicode.com/kaguralir/demo/user/${id}`
     );
-    console.log('does something', results);
+
     return results;
 };
 
@@ -51,10 +51,11 @@ it('return mock', () => {
 });
 
 it('mock modules or custom functions', async () => {
-    jest.spyOn(axios, 'get').mockReturnValueOnce('User1');
+    const jesst = jest.spyOn(axios, 'get').mockReturnValueOnce('User1');
+    console.log("jessst", jesst);
+
 
     const results = await fetchData(1);
-    console.log("results are", results);
 
     expect(results).toBe('User1');
 });
