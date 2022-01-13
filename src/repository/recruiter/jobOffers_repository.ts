@@ -1,4 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { jobOffer } from "../../entity/jobs/jobOffer_entity";
 import { JobOffers } from "../../entity/recruiter/jobOffers_entity";
 import { User } from "../../entity/user_entity";
 
@@ -34,6 +35,35 @@ export class jobOffers_repository {
         }
 
     }
+
+ /*    Get all candidates without matches AND without jobs disliked AND without jobs already
+liked
+
+
+Create new jobOffer/search
+Get all joboffers without matches AND without profiles disliked AND without candidates 
+already liked */
+
+
+
+static async getJobs(candidate_id: number) {
+    const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers LEFT OUTER JOIN interest ON jobOffer_id=jobApplied_id WHERE candidateWhoApplied_id NOT LIKE '%5%' AND recruiterJobOffer_id IS NULL OR recruiterJobOffer_id IS NOT NULL AND interest IS NULL AND candidateWhoApplied_id LIKE '%5%' OR interest_id IS NULL`, [candidate_id]);
+
+    return rows.map(row => new jobOffer({
+        jobOffer_id: row['jobOffer_id'],jobOffer_role: row['jobOffer_role']
+    }));
+
+}
+
+static async getCandidate(recruiter_id: number) {
+    const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE recruiterJobOffer_id NOT LIKE '%2%' OR recruiterJobOffer_id IS NULL OR interest_id IS NULL`, [recruiter_id]);
+
+    return rows.map(row => new User({
+        user_id: row['user_id']
+    }));
+
+}
+
 }
 
 
