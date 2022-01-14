@@ -13,6 +13,7 @@ server.use(express.static('public'));
 server.use(express.json());
 server.use(cors());
 
+
 server.use('/api/user', UserController);
 server.use('/api/jobOffers', JobOffersController);
 server.use('/api/interest', InterestController);

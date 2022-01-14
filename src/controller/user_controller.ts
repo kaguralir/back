@@ -5,12 +5,13 @@ import bcrypt from 'bcrypt';
 import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
-
+import { Uploads } from "../entity/uploads_entity";
+import { cpUpload, createThumbnail, uploader } from "../uploaders/uploads";
 
 export const UserController = Router();
 
 UserController.get('/account', passport.authenticate('jwt', { session: false }), (req, res) => {
-console.log("req user account", req.user);
+    console.log("req user account", req.user);
 
     res.json(req.user);
 
@@ -69,7 +70,7 @@ UserController.post('/login', async (req, res) => {
 });
 
 
-UserController.post('/register', async (req, res) => {
+UserController.post('/register', cpUpload, async (req, res) => {
     try {
 
         const newUser = await new User(req.body);
@@ -80,6 +81,9 @@ UserController.post('/register', async (req, res) => {
         }
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
+        // console.log("req files are ", req.files['image']);
+        /*   const newUpload = new Uploads(req.body);
+          newUpload.imageFileName = await createThumbnail(req.files); */
 
         await user_repository.addUser(newUser);
         res.status(201).json({

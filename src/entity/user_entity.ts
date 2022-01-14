@@ -1,17 +1,14 @@
 
+import Joi from 'joi';
 export class User {
 
 
   public user_id: number;
   public demo: number;
   public role: string;
-  public organizationId: number;
-  public projectId: number;
   public name: string;
   public email: string;
   public password: string;
-  public mobile: number;
-  public createdAt: Date;
   public updatedAt: Date;
 
   constructor(params) {
@@ -28,4 +25,8 @@ export class User {
 
 }
 
+export const userSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(4).required(),
+})
 

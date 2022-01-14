@@ -3,8 +3,10 @@
       "module": "commonjs",
       "esModuleInterop": true,
       "emitDecoratorMetadata": true,
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "target":"es5"
   },
+  
   "exclude": [
       "node_modules"
   ]
