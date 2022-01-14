@@ -44,7 +44,7 @@ export class user_repository {
 
     static async addUser(newUser) {
         try {
-            const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,organizationId, projectId,name, email,password, mobile,updatedAt) VALUES (?,?,?,?,?,?, ?,  ?,?)', [newUser.demo, newUser.role, newUser.organizationId, newUser.projectId, newUser.name, newUser.email, newUser.password, newUser.mobile, newUser.updatedAt]);
+            const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,name, email,password) VALUES (?,?,?,?,?)', [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
         }
         catch (err) {
