@@ -91,7 +91,7 @@ UserController.post('/register', cpUpload, async (req, res) => {
 
         const newUpload = new Uploads(req.files);
 
-        newUpload.fileName = await createThumbnail(req.files['imageFileName']);
+        req.files['imageFileName'] = await createThumbnail(req.files['imageFileName']);
 
 
 

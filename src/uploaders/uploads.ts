@@ -26,7 +26,7 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
     let imagesFile = file;
     console.log("imagesFile", imagesFile);
 
-    let images;
+    let images: Uploads[] = [];
     console.log("file is", imagesFile);
     console.log('file for sharp page is', images);
 
