@@ -41,11 +41,14 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
             .resize(width, height, { fit: 'contain' })
             .toFile(thumbnailFolder + val.filename);
 
-        let image = new Uploads(imagesFile);
 
+        //let image = new Uploads(imagesFile);
+
+        let image = new Uploads(val);
         image.fileName = val.filename;
+        console.log("image properties", image);
         images.push(image);
-        console.log(image)
+        console.log("images are", image)
 
     }
 
