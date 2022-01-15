@@ -6,7 +6,7 @@ import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
-import { cpUpload, uploader } from "../uploaders/uploads";
+import { cpUpload, createThumbnail, uploader } from "../uploaders/uploads";
 
 export const UserController = Router();
 
@@ -89,24 +89,17 @@ UserController.post('/register', cpUpload, async (req, res) => {
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
-        /*  const newImage = new Uploads(req.body.imageFileName);
-         const newPdf = new Uploads(req.body.pdfFileName);
-  */
-        const newUpload = new Uploads(req.files);
+        const newUpload = new Uploads(req.body);
+        console.log("req imageFileName filename", req.files['imageFileName'][0]);
+        console.log("req pdfFileName filename", req.files['pdfFileName'][0]);
 
-
-
-        /* newImage.imageFileName = '/public/uploads/images' + req.body.imageFileName;
-
-        newPdf.pdfFileName = '/public/uploads/pdf' + req.body.pdfFileName;
-        console.log("req files body0", newImage);
-        console.log("req files files00 ", newPdf); */
-
+        // console.log("req files are ", req.files['image']);
+        newUpload.fileName = await createThumbnail(req.files['imageFileName']);
 
 
 
         await user_repository.addUser(newUser, newUpload);
-        console.log("added user", newUser, newUpload);
+        /*   console.log("added user", newUser, newUpload); */
 
 
         res.status(201).json({
@@ -117,7 +110,7 @@ UserController.post('/register', cpUpload, async (req, res) => {
             })
         });
 
-        console.log(" Nouvel utilisateur est : ", newUser);
+        console.log(" Nouvel utilisateur est : ", newUser, req.files['imageFileName']);
 
 
     } catch (error) {
