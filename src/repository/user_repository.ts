@@ -44,14 +44,31 @@ export class user_repository {
 
     static async addUser(newUser, uploads) {
         try {
-            const [addedUser] = await connection.query<ResultSetHeader>('  INSERT INTO user (email, password) VALUES(?, ?); INSERT INTO uploads(candidate_id,imageFileName, pdfFileName) VALUES(LAST_INSERT_ID(),?,?);', [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password, uploads.imageFileName, uploads.pdfFileName]);
+            const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (email, password) VALUES(?, ?)`, [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
+            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(candidate_id,imageFileName, pdfFileName) VALUES(?,?,?);`, [newUser.candidate_id, uploads.imageFileName, uploads.pdfFileName]);
+            console.log("aded user REPO", addedUser);
+            console.log("addUploads REPO", addUploads);
+
+
+
         }
         catch (err) {
             console.log("adduser repo err is", err)
         }
 
     }
+
+    /*     static async newProfile(newUser:string, uploadsImage:string, uploadsPdf:string) {)
+            try {
+                const [addedUser] = await connection.query<ResultSetHeader>(`UPDATE interest SET interest =? WHERE interest_id=? AND jobApplied_id=? AND candidateWhoApplied_id=?`, [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password, LAST_INSERT_ID(),newUser, uploadsImage, uploadsPdf]);
+    
+            }
+            catch (err) {
+                console.log("recruiterAnswer repo err is", err)
+            }
+    
+        } */
 }
 
 

@@ -6,7 +6,7 @@ import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
-import { cpUpload, createThumbnail, uploader } from "../uploaders/uploads";
+import { cpUpload, uploader } from "../uploaders/uploads";
 
 export const UserController = Router();
 
@@ -80,6 +80,7 @@ UserController.post('/register', cpUpload, async (req, res) => {
         }
 
         const newUser = await new User(req.body);
+
         const exists = await user_repository.getUser(newUser.email);
         if (exists) {
             res.status(400).json({ error: 'Email already taken' });
@@ -88,18 +89,29 @@ UserController.post('/register', cpUpload, async (req, res) => {
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
-        const newUpload = new Uploads(req.body);
+        /*  const newImage = new Uploads(req.body.imageFileName);
+         const newPdf = new Uploads(req.body.pdfFileName);
+  */
+        const newUpload = new Uploads(req.files);
 
-        await createThumbnail(req.file);
 
-        newUpload.imageFileName = req.file.filename;
+
+        /* newImage.imageFileName = '/public/uploads/images' + req.body.imageFileName;
+
+        newPdf.pdfFileName = '/public/uploads/pdf' + req.body.pdfFileName;
+        console.log("req files body0", newImage);
+        console.log("req files files00 ", newPdf); */
+
+
 
 
         await user_repository.addUser(newUser, newUpload);
+        console.log("added user", newUser, newUpload);
+
 
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
-            user: newUser,
+            user: newUser, newUpload,
             token: generateToken({
                 email: newUser.email
             })
