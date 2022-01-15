@@ -46,7 +46,7 @@ export class user_repository {
         try {
             const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (name,role,email, password) VALUES(?,?,?,?)`, [newUser.name, newUser.role, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
-            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(user_id,fileName) VALUES(?,?,?) SET user_id=LAST_INSERT_ID();`, [newUser.user_id, uploads.fileName]);
+            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(user_id,fileName) VALUES(?,?) SET user_id=LAST_INSERT_ID();`, [newUser.user_id, uploads.fileName]);
             console.log("aded user REPO", addedUser);
             console.log("addUploads REPO", addUploads);
 
