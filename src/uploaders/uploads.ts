@@ -7,13 +7,12 @@ import { Uploads } from '../entity/uploads_entity';
 const storage = multer.diskStorage({
     async destination(req, file, cb) {
         const uploadFolder = __dirname + '/../../public/uploads';
-        console.log("uplaoder folder", uploadFolder);
+
 
         cb(null, uploadFolder);
     },
     filename(req, file, cb) {
         cb(null, randomUUID() + path.extname(file.originalname));
-        console.log("file,", file);
 
     }
 });
@@ -24,10 +23,10 @@ export const cpUpload = uploader.fields([{ name: 'imageFileName', maxCount: 10 }
 
 export async function createThumbnail(file: any, width = 200, height = 200) {
     const thumbnailFolder = __dirname + '/../../public/uploads/thumbnails/';
-    let imagesFile = file.fieldname.imageFileName;
+    let imagesFile = file;
     console.log("imagesFile", imagesFile);
 
-    let images: Uploads[] = [];
+    let images;
     console.log("file is", imagesFile);
     console.log('file for sharp page is', images);
 

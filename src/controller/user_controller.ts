@@ -89,18 +89,13 @@ UserController.post('/register', cpUpload, async (req, res) => {
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
-        const newUpload = new Uploads(req.body);
-        console.log("req imageFileName filename", req.files['imageFileName'][0]);
-        console.log("req pdfFileName filename", req.files['pdfFileName'][0]);
+        const newUpload = new Uploads(req.files);
 
-        // console.log("req files are ", req.files['image']);
         newUpload.fileName = await createThumbnail(req.files['imageFileName']);
 
 
 
         await user_repository.addUser(newUser, newUpload);
-        /*   console.log("added user", newUser, newUpload); */
-
 
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
