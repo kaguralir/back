@@ -128,6 +128,24 @@ UserController.post('/register', cpUpload, async (req, res) => {
 });
 
 
+UserController.get('/getProfile/:user_id', async (req, res) => {
+    try {
+        const profileUser = await user_repository.getProfile(Number(req.params.user_id));
+
+        return res.status(200).json({
+            success: true,
+            data: profileUser
+        });
+    } catch (err) {
+        console.log("err", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+
 
 
 

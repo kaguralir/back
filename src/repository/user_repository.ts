@@ -17,13 +17,9 @@ export class user_repository {
 
     }
     static async getProfile(user_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user JOIN uploads WHERE user_id=?', [user_id]);
-        if (rows.length === 1) {
-            return new User({
-                user_id: rows[0].user_id, demo: rows[0].demo, role: rows[0].role, name: rows[0].name, email: rows[0].email, password: rows[0].password
-            });
-        }
-        return null;
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user CROSS  JOIN uploads ON user_id = userUploader_id WHERE user_id=?', [user_id]);
+
+        return rows;
 
     }
 

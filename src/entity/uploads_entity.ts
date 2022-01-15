@@ -1,3 +1,5 @@
+import { User } from "./user_entity";
+
 export class Uploads {
 
 
@@ -6,6 +8,7 @@ export class Uploads {
     public fileName: string;
     public pdfFileName: string;
     public jobOffer_id: number;
+    public user: User;
 
 
 
