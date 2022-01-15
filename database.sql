@@ -32,8 +32,8 @@ CREATE TABLE uploads(
   uploads_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   candidate_id INTEGER (100),
   CONSTRAINT FK_candidate_id FOREIGN KEY (candidate_id) REFERENCES user(user_id),
-  imageFileName VARCHAR(100),
-  pdfFileName VARCHAR(100),
+  imageFileName VARCHAR(100) NULL,
+  pdfFileName VARCHAR(100) NULL,
   jobOffer_id INTEGER (100),
   CONSTRAINT FK_jobOffer_id FOREIGN KEY (jobOffer_id) REFERENCES jobOffers (recruiter_id)
 

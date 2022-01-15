@@ -44,9 +44,9 @@ export class user_repository {
 
     static async addUser(newUser, uploads) {
         try {
-            const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (email, password) VALUES(?, ?)`, [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password]);
+            const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (name,role,email, password) VALUES(?,?,?,?)`, [newUser.name, newUser.role, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
-            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(candidate_id,imageFileName, pdfFileName) VALUES(?,?,?);`, [newUser.candidate_id, uploads.imageFileName, uploads.pdfFileName]);
+            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(user_id,fileName) VALUES(?,?,?) SET user_id=LAST_INSERT_ID();`, [newUser.user_id, uploads.fileName]);
             console.log("aded user REPO", addedUser);
             console.log("addUploads REPO", addUploads);
 
