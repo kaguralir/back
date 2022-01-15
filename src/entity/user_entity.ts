@@ -26,6 +26,7 @@ export class User {
 }
 
 export const userSchema = Joi.object({
+  name: Joi.string().min(2).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(4).required(),
 })

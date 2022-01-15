@@ -42,9 +42,9 @@ export class user_repository {
          */
     }
 
-    static async addUser(newUser) {
+    static async addUser(newUser, uploads) {
         try {
-            const [addedUser] = await connection.query<ResultSetHeader>('INSERT INTO user (demo, role,name, email,password) VALUES (?,?,?,?,?)', [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password]);
+            const [addedUser] = await connection.query<ResultSetHeader>('  INSERT INTO user (email, password) VALUES(?, ?); INSERT INTO uploads(candidate_id,imageFileName, pdfFileName) VALUES(LAST_INSERT_ID(),?,?);', [newUser.demo, newUser.role, newUser.name, newUser.email, newUser.password, uploads.imageFileName, uploads.pdfFileName]);
             newUser.user_id = addedUser.insertId;
         }
         catch (err) {

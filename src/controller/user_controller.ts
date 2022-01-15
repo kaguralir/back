@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { user_repository } from "../repository/user_repository";
-import { User } from '../entity/user_entity';
+import { User, userSchema } from '../entity/user_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../utils/token";
 import passport from "passport";
@@ -73,6 +73,12 @@ UserController.post('/login', async (req, res) => {
 UserController.post('/register', cpUpload, async (req, res) => {
     try {
 
+        const { error } = userSchema.validate(req.body, { abortEarly: false });
+        if (error) {
+            res.status(400).json({ error: error.details.map(item => item.message) });
+            return;
+        }
+
         const newUser = await new User(req.body);
         const exists = await user_repository.getUser(newUser.email);
         if (exists) {
@@ -81,11 +87,16 @@ UserController.post('/register', cpUpload, async (req, res) => {
         }
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
-        // console.log("req files are ", req.files['image']);
-        /*   const newUpload = new Uploads(req.body);
-          newUpload.imageFileName = await createThumbnail(req.files); */
 
-        await user_repository.addUser(newUser);
+        const newUpload = new Uploads(req.body);
+
+        await createThumbnail(req.file);
+
+        newUpload.imageFileName = req.file.filename;
+
+
+        await user_repository.addUser(newUser, newUpload);
+
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
             user: newUser,

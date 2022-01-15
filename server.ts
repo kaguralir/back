@@ -10,6 +10,7 @@ export const server = express();
 /* configurePassport(); */
 server.use(passport.initialize());
 server.use(express.static('public'));
+server.use(express.static(__dirname));
 server.use(express.json());
 server.use(cors());
 

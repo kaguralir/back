@@ -17,7 +17,7 @@ export class jobOffer {
 }
 
 
-export const userSchema = Joi.object({
+export const jobOfferSchema = Joi.object({
   jobOffer_role: Joi.string().min(4).required(),
   jobOffer_description: Joi.string().min(4).required(),
 })
