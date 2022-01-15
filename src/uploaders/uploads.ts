@@ -24,17 +24,17 @@ export const cpUpload = uploader.fields([{ name: 'imageFileName', maxCount: 10 }
 export async function createThumbnail(file: any, width = 200, height = 200) {
     const thumbnailFolder = __dirname + '/../../public/uploads/thumbnails/';
     let imagesFile = file;
-    console.log("imagesFile", imagesFile);
+    /*     console.log("imagesFile", imagesFile); */
 
     let images: Uploads[] = [];
-    console.log("file is", imagesFile);
-    console.log('file for sharp page is', images);
-
-    console.log('file for sharp page is', imagesFile);
+    /*     console.log("file is", imagesFile);
+        console.log('file for sharp page is', images);
+    
+        console.log('file for sharp page is', imagesFile); */
     for (const val of imagesFile) {
-        console.log("val is", val)
-        console.log("val filename is is", val.filename)
-        console.log("val path is is", val.path)
+        /*         console.log("val is", val)
+                console.log("val filename is is", val.filename)
+                console.log("val path is is", val.path) */
 
 
         await sharp(val.path)
@@ -46,9 +46,9 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
 
         let image = new Uploads(val);
         image.fileName = val.filename;
-        console.log("image properties", image);
+        console.log("image properties", image.fileName);
         images.push(image);
-        console.log("images are", image)
+        /*     console.log("images are", images) */
 
     }
 
