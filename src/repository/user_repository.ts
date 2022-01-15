@@ -16,6 +16,17 @@ export class user_repository {
         return null;
 
     }
+    static async getProfile(user_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user JOIN uploads WHERE user_id=?', [user_id]);
+        if (rows.length === 1) {
+            return new User({
+                user_id: rows[0].user_id, demo: rows[0].demo, role: rows[0].role, name: rows[0].name, email: rows[0].email, password: rows[0].password
+            });
+        }
+        return null;
+
+    }
+
 
 
     static async getAllCompanies() {
@@ -42,12 +53,24 @@ export class user_repository {
          */
     }
 
-    static async addUser(newUser, uploads) {
+    static async addUser(newUser, image, pdf) {
         try {
             const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (name,role,email, password) VALUES(?,?,?,?)`, [newUser.name, newUser.role, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
-            const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,fileName) VALUES(?,?) SET user_id=LAST_INSERT_ID();`, [newUser.user_id, uploads.fileName]);
-            console.log("addUploads REPO", addUploads);
+            console.log("uploads are =========>", image);
+            console.log("pdf are =========>", pdf);
+
+
+            for (const val of image) {
+                console.log("val is 0000", val);
+
+                const [addUploads] = await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,fileName,pdfFileName) VALUES(?,?,?) ;`, [newUser.user_id, val.fileName, val.pdfFileName]);
+
+
+            }
+
+
+
         }
         catch (err) {
             console.log("adduser repo err is", err)
