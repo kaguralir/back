@@ -73,6 +73,8 @@ UserController.post('/login', async (req, res) => {
 
 UserController.post('/register', uploader, async (req, res, next) => {
     try {
+
+
         console.log('Body: ', req.body)
         console.log('Headers: ', req.headers)
         console.log("req.file", req.file)
