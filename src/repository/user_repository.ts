@@ -49,24 +49,24 @@ export class user_repository {
          */
     }
 
-    static async addUser(newUser, image, pdf) {
+    static async addUser(newUser) {
         try {
             const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (name,role,email, password) VALUES(?,?,?,?)`, [newUser.name, newUser.role, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
 
-            console.log("pdf are =========>", pdf);
+            console.log("pdf are =========>", newUser.pdfs);
 
 
-            for (const val of image) {
+            for (const val of newUser.images) {
 
 
                 await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,fileName) VALUES(?,?) ;`, [newUser.user_id, val.fileName]);
 
             }
-            for (const val of pdf) {
+            for (const val of newUser.pdfs) {
                 console.log("val is PDF ====>", val);
 
-                await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, val.pdfFileName]);
+                await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, val.filename]);
             }
 
         }

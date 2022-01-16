@@ -4,11 +4,11 @@ export class Uploads {
 
 
     public upload_id: number;
-    public userUploader_id: number;
+    public user: User;
     public fileName: string;
     public pdfFileName: string;
     public jobOffer_id: number;
-    public user: User;
+
 
 
 

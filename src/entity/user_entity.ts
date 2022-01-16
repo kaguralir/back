@@ -11,6 +11,8 @@ export class User {
   public email: string;
   public password: string;
   public updatedAt: Date;
+  public images: Uploads[] = [];
+  public pdfs: Uploads[] = [];
 
 
   constructor(params) {

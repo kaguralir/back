@@ -27,7 +27,7 @@ export const uploader = multer({ storage }).fields([{ name: 'imageFileName', max
 
 export async function createThumbnail(file: any, width = 200, height = 200) {
     const thumbnailFolder = __dirname + '/../../public/uploads/thumbnails/';
-    console.log("FILE THUMB", file);
+    /*     console.log("FILE THUMB", file); */
 
     let imagesFile = file;
 
@@ -44,7 +44,7 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
         let image = new Uploads(val);
         image.fileName = val.filename;
         images.push(image);
-        console.log("SHARPED IMAGES", images);
+        /*    console.log("SHARPED IMAGES", images); */
 
 
     }

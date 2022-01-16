@@ -102,36 +102,24 @@ UserController.post('/register', uploader, async (req, res, next) => {
             console.log('You have to upload a file');
             return
         }
-        const newUpload = new Uploads(req.body);
 
-        let images = req.files['imageFileName'];
-        if (images) {
-            images = await createThumbnail(req.files['imageFileName']);
-            newUpload.fileName = images;
-        }
-        console.log("images", images);
+        newUser.images = await createThumbnail(req.files['imageFileName'])
 
-
-        let pdf = req.files['pdfFileName'];
+        newUser.pdfs = req.files['pdfFileName'];
         let allPDF: Uploads[] = [];
-        for (const item of pdf) {
-            let itemPDF = new Uploads(item);
-            itemPDF.pdfFileName = item.filename;
-            allPDF.push(itemPDF);
+        for (const pdf of newUser.pdfs) {
+
+            let onePdf = new Uploads(pdf);
+            onePdf.pdfFileName = pdf.pdfFileName;
+            allPDF.push(onePdf);
 
         }
-        console.log("pdf", pdf);
 
-        /*    console.log("all pdf", allPDF);
-    */
-
-        /*   console.log("AFTER=========================", newUpload); */
-
-        await user_repository.addUser(newUser, images, allPDF);
+        await user_repository.addUser(newUser);
 
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
-            user: newUser, images, allPDF,
+            user: newUser,
             token: generateToken({
                 email: newUser.email
             })
