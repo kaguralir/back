@@ -11,7 +11,7 @@ export class User {
   public email: string;
   public password: string;
   public updatedAt: Date;
-  public allUploads: Uploads[] = [];
+
 
   constructor(params) {
     Object.assign(this, params);
@@ -31,5 +31,7 @@ export const userSchema = Joi.object({
   name: Joi.string().min(2).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(4).required(),
-})
+  role: Joi.string().required(),
+
+}).options({ allowUnknown: true });
 

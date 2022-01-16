@@ -6,6 +6,8 @@ import { InterestController } from './src/controller/interest/interest_controlle
 import { configurePassport } from './utils/token'
 import passport from 'passport';
 
+
+
 export const server = express();
 /* configurePassport(); */
 server.use(passport.initialize());
@@ -13,6 +15,7 @@ server.use(express.static('public'));
 server.use(express.static(__dirname));
 server.use(express.json());
 server.use(cors());
+server.use(express.urlencoded({ extended: true }));
 
 
 server.use('/api/user', UserController);

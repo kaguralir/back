@@ -14,15 +14,21 @@ const storage = multer.diskStorage({
     filename(req, file, cb) {
         cb(null, randomUUID() + path.extname(file.originalname));
 
+
     }
 });
 
-export const uploader = multer({ storage });
-export const cpUpload = uploader.fields([{ name: 'imageFileName', maxCount: 10 }, { name: 'pdfFileName', maxCount: 10 }])
+export const uploader = multer({ storage }).fields([{ name: 'imageFileName', maxCount: 10 }, { name: 'pdfFileName', maxCount: 10 }]);
+/* export const cpUpload = uploader.fields([{ name: 'imageFileName', maxCount: 10 }, { name: 'pdfFileName', maxCount: 10 }])
+ */
+
+
 
 
 export async function createThumbnail(file: any, width = 200, height = 200) {
     const thumbnailFolder = __dirname + '/../../public/uploads/thumbnails/';
+    console.log("FILE THUMB", file);
+
     let imagesFile = file;
 
 
@@ -38,6 +44,8 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
         let image = new Uploads(val);
         image.fileName = val.filename;
         images.push(image);
+        console.log("SHARPED IMAGES", images);
+
 
     }
 

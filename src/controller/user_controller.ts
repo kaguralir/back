@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
 import { user_repository } from "../repository/user_repository";
 import { User, userSchema } from '../entity/user_entity';
 import bcrypt from 'bcrypt';
@@ -6,7 +6,8 @@ import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
-import { cpUpload, createThumbnail, uploader } from "../uploaders/uploads";
+import { createThumbnail, uploader } from "../uploaders/uploads";
+
 
 export const UserController = Router();
 
@@ -70,8 +71,13 @@ UserController.post('/login', async (req, res) => {
 });
 
 
-UserController.post('/register', cpUpload, async (req, res) => {
+UserController.post('/register', uploader, async (req, res, next) => {
     try {
+        console.log('Body: ', req.body)
+        console.log('Headers: ', req.headers)
+        console.log("req.file", req.file)
+        console.log("req.files", req.files)
+
 
         const { error } = userSchema.validate(req.body, { abortEarly: false });
         if (error) {
@@ -89,12 +95,22 @@ UserController.post('/register', cpUpload, async (req, res) => {
 
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
-        const newUpload = new Uploads(req.files);
+
+
+
+        if (req['files'] == null) {
+            console.log('You have to upload a file');
+            return
+        }
+        const newUpload = new Uploads(req.body);
+
         let images = req.files['imageFileName'];
         if (images) {
             images = await createThumbnail(req.files['imageFileName']);
             newUpload.fileName = images;
         }
+        console.log("images", images);
+
 
         let pdf = req.files['pdfFileName'];
         let allPDF: Uploads[] = [];
@@ -104,6 +120,8 @@ UserController.post('/register', cpUpload, async (req, res) => {
             allPDF.push(itemPDF);
 
         }
+        console.log("pdf", pdf);
+
         /*    console.log("all pdf", allPDF);
     */
 
