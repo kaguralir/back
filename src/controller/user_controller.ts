@@ -88,13 +88,14 @@ UserController.post('/register', async (req, res, next) => {
         let newImages: Uploads[] = [];
         for (const oneImage of req.body.file) {
 
-            let onePdf = new Uploads(oneImage);
+           
             const baseImage = await uploadImage(oneImage);
-            console.log("onePDF", onePdf);
+            let image = new Uploads(baseImage);
+            console.log("onePDF", image);
             
 console.log("base omage", baseImage);
 
-            onePdf.fileName = oneImage.fileName;
+image.fileName = oneImage.fileName;
             newImages.push(oneImage);
             newUser.images = newImages;
         }

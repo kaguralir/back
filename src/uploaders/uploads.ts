@@ -9,6 +9,7 @@ export async function uploadImage(base64: string) {
 
     const baseImage = randomUUID() + '.jpg';
     const buffer = Buffer.from(base64, 'base64');
+console.log("base64", base64);
 
     const img = sharp(buffer)
         .jpeg({ quality: 70 });
