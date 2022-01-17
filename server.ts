@@ -10,15 +10,16 @@ import multer from 'multer';
 
 
 export const server = express();
-/* configurePassport(); */
+
+server.use(cors());
+
+
+configurePassport();
+server.use(express.urlencoded({limit: '2000mb', extended: true,  parameterLimit:50000,type:'application/x-www-form-urlencoded' }));
+server.use(express.text({ limit: '2000mb' }));
+server.use(express.json({limit:'200mb',type:'application/json'}));
 server.use(passport.initialize());
 server.use(express.static('public'));
-server.use(express.static('public/uploads'));
-server.use(express.static(__dirname));
-server.use(express.json());
-server.use(cors());
-/* server.use(express.urlencoded({ limit: '50mb', extended: false })) */
-server.use(multer({ dest: './public/uploads/' }).fields([{ name: 'imageFileName' }, { name: 'pdfFileName' }]));
 
 
 

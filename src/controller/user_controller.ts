@@ -1,12 +1,12 @@
 import { NextFunction, Router } from "express";
 import { user_repository } from "../repository/user_repository";
-import { User, userSchema } from '../entity/user_entity';
+import { User } from '../entity/user_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
-import { createThumbnail, uploader } from "../uploaders/uploads";
+import { uploadImage } from "../uploaders/uploads";
 
 
 export const UserController = Router();
@@ -71,23 +71,10 @@ UserController.post('/login', async (req, res) => {
 });
 
 
-UserController.post('/register', uploader, async (req, res, next) => {
+UserController.post('/register', async (req, res, next) => {
     try {
 
-
-        console.log('Body: ', req.body)
-        console.log('Headers: ', req.headers)
-        console.log("req.file", req.file)
-        console.log("req.files", req.files)
-
-
-        const { error } = userSchema.validate(req.body, { abortEarly: false });
-        if (error) {
-            res.status(400).json({ error: error.details.map(item => item.message) });
-            return;
-        }
-
-        const newUser = await new User(req.body);
+ const newUser = await new User(req.body);
 
         const exists = await user_repository.getUser(newUser.email);
         if (exists) {
@@ -98,24 +85,21 @@ UserController.post('/register', uploader, async (req, res, next) => {
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
 
+        let newImages: Uploads[] = [];
+        for (const oneImage of req.body.file) {
 
+            let onePdf = new Uploads(oneImage);
+            const baseImage = await uploadImage(oneImage);
+            console.log("onePDF", onePdf);
+            
+console.log("base omage", baseImage);
 
-        if (req['files'] == null) {
-            console.log('You have to upload a file');
-            return
+            onePdf.fileName = oneImage.fileName;
+            newImages.push(oneImage);
+            newUser.images = newImages;
         }
 
-        newUser.images = await createThumbnail(req.files['imageFileName'])
-
-        newUser.pdfs = req.files['pdfFileName'];
-        let allPDF: Uploads[] = [];
-        for (const pdf of newUser.pdfs) {
-
-            let onePdf = new Uploads(pdf);
-            onePdf.pdfFileName = pdf.pdfFileName;
-            allPDF.push(onePdf);
-
-        }
+        newUser.pdfs = req.body.pdf;
 
         await user_repository.addUser(newUser);
 

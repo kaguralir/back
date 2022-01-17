@@ -4,33 +4,39 @@ import { randomUUID } from 'crypto';
 import sharp from 'sharp';
 import { Uploads } from '../entity/uploads_entity';
 
-const storage = multer.diskStorage({
-    async destination(req, file, cb) {
-        const uploadFolder = __dirname + '/../../public/';
+
+export async function uploadImage(base64: string) {
+
+    const baseImage = randomUUID() + '.jpg';
+    const buffer = Buffer.from(base64, 'base64');
+
+    const img = sharp(buffer)
+        .jpeg({ quality: 70 });
+    await Promise.all([
+        img.toFile(__dirname + '/../../public/uploads/' + baseImage),
+        img.resize(200, 200).toFile(__dirname + '/../../public/uploads/thumbnails/' + baseImage)
+    ]);
+
+    // for (const img of baseImage) {
+    //         await Promise.all([
+    //         img.toFormat(randomUUID() + '.jpg'),
+    //         img.toBuffer(base64, 'base64'),     
+    //         img.toFile(__dirname + '/../../public/uploads/' + filename),
+    //         img.resize(200, 200).toFile(__dirname + '/../../public/uploads/thumbnails/' + filename)
+    //     ]);
+    //     let image = new Uploads(img);
+    //     image.fileName = img.filename;
+    //     images.push(image);
+
+    // }
+    
+
+    return baseImage;
+}
 
 
-
-        cb(null, uploadFolder);
-    },
-    filename(req, file, cb) {
-
-
-        cb(null, randomUUID() + path.extname(file.originalname));
-
-
-    }
-});
-
-export const uploader = multer({ storage }).fields([{ name: 'imageFileName' }, { name: 'pdfFileName' }]);
-/* export const cpUpload = uploader.fields([{ name: 'imageFileName', maxCount: 10 }, { name: 'pdfFileName', maxCount: 10 }])
- */
-
-
-
-
-export async function createThumbnail(file: any, width = 200, height = 200) {
+export async function uploadPdf(file: any, width = 200, height = 200) {
     const thumbnailFolder = __dirname + '/../../public/thumbnails/';
-    /*     console.log("FILE THUMB", file); */
 
     let imagesFile = file;
     console.log("FILE", file);
@@ -48,8 +54,6 @@ export async function createThumbnail(file: any, width = 200, height = 200) {
         let image = new Uploads(val);
         image.fileName = val.filename;
         images.push(image);
-        /*    console.log("SHARPED IMAGES", images); */
-
 
     }
 
