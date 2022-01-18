@@ -43,12 +43,35 @@ export async function uploadPdf(base64: string) {
     const namePdf = randomUUID() + '.pdf';
     fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer, 'binary'); //works but is meant to return undefined
 
+
     const dirents = fs.readdirSync(__dirname + '/../../public/pdfs/', { withFileTypes: true });
     const filesNames = dirents
         .filter(dirent => dirent.isFile())
         .map(dirent => dirent.name);
     console.log("filesNlaes", filesNames);
+    for (var i = 0; i < filesNames.length; i++) {
+        if (filesNames[i] === namePdf) {
+            console.log("LISTE", filesNames[i]); //print the file
+            return
+        }
+    }
 
+    console.log("ONE FILE", filesNames);
+
+    fs.readdir(__dirname + '/../../public/pdfs/' + namePdf,
+        // callback function that is called when reading file is done
+        function (err, data) {
+
+            let newPdf: Uploads[] = []
+            let pdfPersist = new Uploads(data.path.extname);
+            pdfPersist.pdfFileName = data;
+            newPdf.push(pdfPersist);
+            console.log(pdfPersist)
+            if (err) throw err;
+            // data is a buffer containing file content
+            console.log("date is ", data.path.extname)
+            return newPdf
+        });
 
 
     /*    const getPdfCreated = namePdf
