@@ -74,7 +74,7 @@ UserController.post('/login', async (req, res) => {
 UserController.post('/register', async (req, res, next) => {
     try {
 
- const newUser = await new User(req.body);
+        const newUser = await new User(req.body);
 
         const exists = await user_repository.getUser(newUser.email);
         if (exists) {
@@ -88,20 +88,21 @@ UserController.post('/register', async (req, res, next) => {
         let newImages: Uploads[] = [];
         for (const oneImage of req.body.file) {
 
-           
+
             const baseImage = await uploadImage(oneImage);
             let image = new Uploads(baseImage);
-            console.log("onePDF", image);
-            
-console.log("base omage", baseImage);
+            image.fileName = baseImage;
 
-image.fileName = oneImage.fileName;
-            newImages.push(oneImage);
+            newImages.push(image);
             newUser.images = newImages;
+            /*   console.log("newUser.images", newImages); */
+
         }
 
-        newUser.pdfs = req.body.pdf;
 
+
+        /*      newUser.pdfs = req.body.pdf;
+      */
         await user_repository.addUser(newUser);
 
         res.status(201).json({
