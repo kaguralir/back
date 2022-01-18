@@ -7,7 +7,7 @@ import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
 import { uploadImage, uploadPdf } from "../uploaders/uploads";
-
+const fs = require("fs");
 
 export const UserController = Router();
 
@@ -104,6 +104,8 @@ UserController.post('/register', async (req, res, next) => {
         console.log("REQ PDF", req.body.pdf);
 
         const pdfFile = await uploadPdf(req.body.pdf)
+
+
         console.log("PDF FILE CON", pdfFile);
 
 

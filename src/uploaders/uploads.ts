@@ -3,6 +3,7 @@ import path from 'path';
 import { randomUUID } from 'crypto';
 import sharp from 'sharp';
 import { Uploads } from '../entity/uploads_entity';
+import { Duplex } from 'stream';
 const fs = require("fs");
 const got = require("got");
 const sharpStream = sharp({
@@ -37,20 +38,22 @@ export async function uploadPdf(base64: string) {
     console.log("base PDF", base64);
 
     const uriPDF = base64.split(';base64,').pop()
-    console.log("uri cut", uriPDF);
+    const buffer = Buffer.from(uriPDF, 'base64url');
+    const namePdf = randomUUID() + '.pdf';
+    const convertPdf = fs.writeFileSync(namePdf, buffer, 'binary');
+    /* fs.writeFileSync('some.pdf', buffer) */
+    console.log("buffer pdf", convertPdf);
+    return convertPdf
+    // let Readable = require('stream').Readable
 
-    let Readable = require('stream').Readable
+    // let pdf = new Readable(buffer)
+    // fs.writeFile(pdf)
+    // pdf.push(pdf)
+    // pdf.push(null)
 
-    const pdfBuffer = Buffer.from(uriPDF, 'base64')
+    // pdf.pipe(fs.writeFile(__dirname + '/../../public/uploads/' + namePdf));
 
-    let pdf = new Readable()
-
-    pdf.push(pdfBuffer)
-    pdf.push(null)
-
-    pdf.pipe(fs.createWriteStream("truc.pdf"));
-
-    console.log("pdf", pdf);
+    // console.log("pdf", pdf);
 
 
 
