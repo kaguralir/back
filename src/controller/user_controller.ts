@@ -85,13 +85,15 @@ UserController.post('/register', async (req, res, next) => {
         newUser.password = await bcrypt.hash(newUser.password, 11);
 
 
+
         let newImages: Uploads[] = [];
         for (const oneImage of req.body.file) {
 
 
+
             const baseImage = await uploadImage(oneImage);
             let image = new Uploads(baseImage);
-            image.fileName = baseImage;
+            image.fileName = baseImage.toString();
 
             newImages.push(image);
             newUser.images = newImages;
@@ -116,7 +118,7 @@ UserController.post('/register', async (req, res, next) => {
 
 
     } catch (error) {
-        console.log("error is", error);
+        console.log("error user controller is", error);
         res.status(500).json(error);
     }
 });

@@ -9,24 +9,25 @@ const sharpStream = sharp({
     failOnError: false
 });
 export async function uploadImage(base64: string) {
-
+    /*   const body = await got(base64).buffer();
+      console.log("body", body);
+   */
     const baseImage = randomUUID() + '.jpeg';
-    const buffer = Buffer.from(base64, 'base64');
-    // console.log("base64", base64);
-    console.log("bufffer", buffer);
-
+    const uri = base64.split(';base64,').pop()
+    const buffer = Buffer.from(uri, 'base64url');
     const img = sharp(buffer)
-        .jpeg({ quality: 70 });
+    console.log("image", img);
+
     await Promise.all([
+        // img.toFormat('png'),
         img.toFile(__dirname + '/../../public/uploads/' + baseImage),
         img.resize(200, 200).toFile(__dirname + '/../../public/uploads/thumbnails/' + baseImage)])
         .then(res => { console.log("Done ===============>!", res); })
         .catch(err => {
             console.error("Error sharp promise", err);
-            console.error("Error sharp promise IMG =>", img);
-
-
         });
+    console.log("base ilage", baseImage);
+
 
     return baseImage;
 }
