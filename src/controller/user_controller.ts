@@ -88,25 +88,18 @@ UserController.post('/register', async (req, res, next) => {
 
         let newImages: Uploads[] = [];
         for (const oneImage of req.body.file) {
-
-
-
             const baseImage = await uploadImage(oneImage);
             let image = new Uploads(baseImage);
             image.fileName = baseImage.toString();
 
             newImages.push(image);
             newUser.images = newImages;
-            /*   console.log("newUser.images", newImages); */
 
         }
 
-        console.log("REQ PDF", req.body.pdf);
-
         const pdfFile = await uploadPdf(req.body.pdf)
+        console.log("PDF file", pdfFile);
 
-
-        console.log("PDF FILE CON", pdfFile);
 
 
         await user_repository.addUser(newUser);

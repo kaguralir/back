@@ -5,7 +5,8 @@ import sharp from 'sharp';
 import { Uploads } from '../entity/uploads_entity';
 import { Duplex } from 'stream';
 const fs = require("fs");
-const got = require("got");
+import { dirname } from 'path';
+
 const sharpStream = sharp({
     failOnError: false
 });
@@ -35,25 +36,14 @@ export async function uploadImage(base64: string) {
 
 
 export async function uploadPdf(base64: string) {
-    console.log("base PDF", base64);
-
+    /*    console.log("base PDF", base64); */
+    const uploadPdfFolder = __dirname + '/../../public/uploads/pdfs/'
     const uriPDF = base64.split(';base64,').pop()
     const buffer = Buffer.from(uriPDF, 'base64url');
     const namePdf = randomUUID() + '.pdf';
-    const convertPdf = fs.writeFileSync(namePdf, buffer, 'binary');
-    /* fs.writeFileSync('some.pdf', buffer) */
-    console.log("buffer pdf", convertPdf);
-    return convertPdf
-    // let Readable = require('stream').Readable
+    fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer, 'binary');
 
-    // let pdf = new Readable(buffer)
-    // fs.writeFile(pdf)
-    // pdf.push(pdf)
-    // pdf.push(null)
-
-    // pdf.pipe(fs.writeFile(__dirname + '/../../public/uploads/' + namePdf));
-
-    // console.log("pdf", pdf);
+    return buffer
 
 
 
