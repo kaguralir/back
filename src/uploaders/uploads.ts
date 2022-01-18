@@ -36,61 +36,32 @@ export async function uploadImage(base64: string) {
 
 
 export async function uploadPdf(base64: string) {
-    /*    console.log("base PDF", base64); */
-    const uploadPdfFolder = __dirname + '/../../public/uploads/pdfs/'
+
     const uriPDF = base64.split(';base64,').pop()
     const buffer = Buffer.from(uriPDF, 'base64url');
     const namePdf = randomUUID() + '.pdf';
-    fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer, 'binary'); //works but is meant to return undefined
-
+    await fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer)
 
     const dirents = fs.readdirSync(__dirname + '/../../public/pdfs/', { withFileTypes: true });
     const filesNames = dirents
+
         .filter(dirent => dirent.isFile())
         .map(dirent => dirent.name);
-    console.log("filesNlaes", filesNames);
-    for (var i = 0; i < filesNames.length; i++) {
+    console.log("All files", filesNames);
+
+    for (let i = 0; i < filesNames.length; i++) {
         if (filesNames[i] === namePdf) {
-            console.log("LISTE", filesNames[i]); //print the file
-            return
+            console.log("The filen", filesNames[i]);
+
+            let pdfPersist = new Uploads(filesNames[i]);
+            pdfPersist.pdfFileName = filesNames[i].toString();
+            console.log("URI U", pdfPersist.pdfFileName);
+
+
+            return pdfPersist
+
         }
     }
-
-    console.log("ONE FILE", filesNames);
-
-    fs.readdir(__dirname + '/../../public/pdfs/' + namePdf,
-        // callback function that is called when reading file is done
-        function (err, data) {
-
-            let newPdf: Uploads[] = []
-            let pdfPersist = new Uploads(data.path.extname);
-            pdfPersist.pdfFileName = data;
-            newPdf.push(pdfPersist);
-            console.log(pdfPersist)
-            if (err) throw err;
-            // data is a buffer containing file content
-            console.log("date is ", data.path.extname)
-            return newPdf
-        });
-
-
-    /*    const getPdfCreated = namePdf
-       console.log("get pdf created", getPdfCreated);
-   
-       let newPdf: Uploads[] = []
-       let pdfPersist = new Uploads(getPdfCreated);
-       pdfPersist.pdfFileName = namePdf;
-       newPdf.push(pdfPersist);
-       console.log(pdfPersist)
-   
-   
-       console.log("PERSIST PDF", pdfPersist.pdfFileName);
-   
-      */
-
-
-
-
 
 
 }
