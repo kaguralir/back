@@ -16,7 +16,7 @@ export async function uploadImage(base64: string) {
     const uri = base64.split(';base64,').pop()
     const buffer = Buffer.from(uri, 'base64url');
     const img = sharp(buffer)
-    console.log("image", img);
+
 
     await Promise.all([
         // img.toFormat('png'),
@@ -33,29 +33,25 @@ export async function uploadImage(base64: string) {
 }
 
 
-export async function uploadPdf(file: any, width = 200, height = 200) {
-    const thumbnailFolder = __dirname + '/../../public/thumbnails/';
+export async function uploadPdf(base64: string) {
+    console.log("base PDF", base64);
 
-    let imagesFile = file;
-    console.log("FILE", file);
+    const uriPDF = base64.split(';base64,').pop()
+    console.log("uri cut", uriPDF);
 
+    let Readable = require('stream').Readable
 
-    let images: Uploads[] = [];
+    const pdfBuffer = Buffer.from(uriPDF, 'base64')
 
-    for (const val of imagesFile) {
+    let pdf = new Readable()
 
-        await sharp(val.path)
-            .resize(width, height, { fit: 'contain' })
-            .toFile(thumbnailFolder + val.filename);
+    pdf.push(pdfBuffer)
+    pdf.push(null)
 
+    pdf.pipe(fs.createWriteStream("truc.pdf"));
 
-        let image = new Uploads(val);
-        image.fileName = val.filename;
-        images.push(image);
-
-    }
+    console.log("pdf", pdf);
 
 
-    return images;
 
 }

@@ -63,11 +63,11 @@ export class user_repository {
                 await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,fileName) VALUES(?,?) ;`, [newUser.user_id, val.fileName]);
 
             }
-            // for (const val of newUser.pdfs) {
-            //     console.log("val is PDF ====>", val);
+            for (const val of newUser.pdfs) {
+                console.log("val is PDF ====>", val);
 
-            //     await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, val.filename]);
-            // }
+                await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, val.filename]);
+            }
 
         }
         catch (err) {

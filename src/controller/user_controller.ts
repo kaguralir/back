@@ -6,7 +6,7 @@ import { generateToken } from "../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../utils/token"
 import { Uploads } from "../entity/uploads_entity";
-import { uploadImage } from "../uploaders/uploads";
+import { uploadImage, uploadPdf } from "../uploaders/uploads";
 
 
 export const UserController = Router();
@@ -101,10 +101,12 @@ UserController.post('/register', async (req, res, next) => {
 
         }
 
+        console.log("REQ PDF", req.body.pdf);
+
+        const pdfFile = await uploadPdf(req.body.pdf)
+        console.log("PDF FILE CON", pdfFile);
 
 
-        /*      newUser.pdfs = req.body.pdf;
-      */
         await user_repository.addUser(newUser);
 
         res.status(201).json({
