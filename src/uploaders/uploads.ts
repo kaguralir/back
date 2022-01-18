@@ -41,9 +41,32 @@ export async function uploadPdf(base64: string) {
     const uriPDF = base64.split(';base64,').pop()
     const buffer = Buffer.from(uriPDF, 'base64url');
     const namePdf = randomUUID() + '.pdf';
-    fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer, 'binary');
+    fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer, 'binary'); //works but is meant to return undefined
 
-    return buffer
+    const dirents = fs.readdirSync(__dirname + '/../../public/pdfs/', { withFileTypes: true });
+    const filesNames = dirents
+        .filter(dirent => dirent.isFile())
+        .map(dirent => dirent.name);
+    console.log("filesNlaes", filesNames);
+
+
+
+    /*    const getPdfCreated = namePdf
+       console.log("get pdf created", getPdfCreated);
+   
+       let newPdf: Uploads[] = []
+       let pdfPersist = new Uploads(getPdfCreated);
+       pdfPersist.pdfFileName = namePdf;
+       newPdf.push(pdfPersist);
+       console.log(pdfPersist)
+   
+   
+       console.log("PERSIST PDF", pdfPersist.pdfFileName);
+   
+      */
+
+
+
 
 
 
