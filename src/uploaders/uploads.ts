@@ -42,26 +42,10 @@ export async function uploadPdf(base64: string) {
     const namePdf = randomUUID() + '.pdf';
     await fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer)
 
-    const dirents = fs.readdirSync(__dirname + '/../../public/pdfs/', { withFileTypes: true });
-    const filesNames = dirents
-
-        .filter(dirent => dirent.isFile())
-        .map(dirent => dirent.name);
-    console.log("All files", filesNames);
-
-    for (let i = 0; i < filesNames.length; i++) {
-        if (filesNames[i] === namePdf) {
-            console.log("The filen", filesNames[i]);
-
-            let pdfPersist = new Uploads(filesNames[i]);
-            pdfPersist.pdfFileName = filesNames[i].toString();
-            console.log("URI U", pdfPersist.pdfFileName);
-
-
-            return pdfPersist
-
-        }
-    }
+    return namePdf;
+   
+        
+    
 
 
 }

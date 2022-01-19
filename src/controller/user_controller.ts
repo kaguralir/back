@@ -98,7 +98,7 @@ UserController.post('/register', async (req, res, next) => {
         }
 
         const pdfFile = await uploadPdf(req.body.pdf)
-        newUser.pdfs = pdfFile
+        newUser.pdfs = new Uploads({pdfFileName:pdfFile,user:newUser})
         await user_repository.addUser(newUser);
 
         res.status(201).json({

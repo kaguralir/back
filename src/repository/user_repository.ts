@@ -60,7 +60,7 @@ export class user_repository {
                 await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,fileName) VALUES(?,?) ;`, [newUser.user_id, val.fileName]);
 
             }
-            await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, newUser.pdfs]);
+            await connection.query<ResultSetHeader>(`INSERT INTO uploads(userUploader_id,pdfFileName) VALUES(?,?) ;`, [newUser.user_id, newUser.pdfs.pdfFileName]);
 
             /*             for (const val of newUser.pdfs) {
                             console.log("val is PDF ====>", val);
