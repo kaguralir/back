@@ -51,9 +51,12 @@ CREATE TABLE jobOffers(
   recruiter_id INTEGER(100),
   CONSTRAINT FK_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES user(user_id),
   available TINYINT(1),
+  remote TINYINT(1),
   organizationName VARCHAR(100),
   jobOffer_role VARCHAR(100),
   jobOffer_description VARCHAR(100),
+  country VARCHAR(100),
+  city VARCHAR(100),
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 DROP TABLE IF EXISTS conversations;
