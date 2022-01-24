@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { jobOffers_repository } from "../../repository/recruiter/jobOffers_repository";
-import {JobOffers} from '../../entity/recruiter/jobOffers_entity';
+import { JobOffers } from '../../entity/recruiter/jobOffers_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../../utils/token";
 import passport from "passport";
@@ -20,7 +20,7 @@ JobOffersController.get('/allJobs', async (req, res) => {
             data: post
         });
     } catch (err) {
-        console.log("err get all jobs is",err);
+        console.log("err get all jobs is", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
@@ -33,17 +33,16 @@ JobOffersController.get('/allJobs', async (req, res) => {
 JobOffersController.post('/addJob', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const newJob = new JobOffers(req.body);
-       /*  console.log("send data user id is ", req.user);
-        console.log("req user is", req.user); */
+        await jobOffers_repository.addJob(newJob, req.user['user_id']);
 
-        
-        await jobOffers_repository.addJob(newJob,req.user);
+        console.log("new", newJob);
+        console.log("new", req.user['user_id']);
         res.status(201).json({
             success: true,
             data: newJob
-            })
-        
-    } 
+        })
+
+    }
     catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -51,9 +50,9 @@ JobOffersController.post('/addJob', passport.authenticate('jwt', { session: fals
 });
 
 
-JobOffersController.get('/getJobs', passport.authenticate('jwt', { session: false }),  async (req, res) => {
+JobOffersController.get('/getJobs', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        
+
         const candidate_id = req.user['user_id'];
         const post = await jobOffers_repository.getJobs(candidate_id);
 
@@ -63,7 +62,7 @@ JobOffersController.get('/getJobs', passport.authenticate('jwt', { session: fals
             data: post
         });
     } catch (err) {
-        console.log("err getjobs is",err);
+        console.log("err getjobs is", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'
@@ -75,7 +74,7 @@ JobOffersController.get('/getCandidates', passport.authenticate('jwt', { session
     try {
 
         const recruiter_id = req.user['user_id']
-        if(recruiter_id){
+        if (recruiter_id) {
             const post = await jobOffers_repository.getCandidate(recruiter_id);
 
             return res.status(200).json({
@@ -84,9 +83,9 @@ JobOffersController.get('/getCandidates', passport.authenticate('jwt', { session
                 data: post
             });
         }
-      
+
     } catch (err) {
-        console.log("err getjobs is",err);
+        console.log("err getjobs is", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'

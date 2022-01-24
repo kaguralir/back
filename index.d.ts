@@ -13,10 +13,7 @@ declare global {
             filename: string;
         }
     }
-    interface MulterRequest extends Request {
-        file: any;
-        files: any
-    }
+
 }
 
 declare module 'express' {
@@ -25,8 +22,3 @@ declare module 'express' {
         files: any // Actually should be something like `multer.Files`
     }
 }
-
-interface MulterRequest extends Request {
-    file: any;
-}
-

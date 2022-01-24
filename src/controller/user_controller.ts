@@ -15,6 +15,8 @@ UserController.get('/account', passport.authenticate('jwt', { session: false }),
     console.log("req user account", req.user);
 
     res.json(req.user);
+    console.log("usr", req.user);
+
 
 });
 
@@ -98,7 +100,7 @@ UserController.post('/register', async (req, res, next) => {
         }
 
         const pdfFile = await uploadPdf(req.body.pdf)
-        newUser.pdfs = new Uploads({pdfFileName:pdfFile,user:newUser})
+        newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })
         await user_repository.addUser(newUser);
 
         res.status(201).json({
