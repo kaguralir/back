@@ -67,6 +67,13 @@ export class jobOffers_repository {
 
     }
 
+    static async getJobByRecruiter(recruiter_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE recruiter_id=?`, [recruiter_id]);
+
+        return rows;
+
+    }
+
 }
 
 
