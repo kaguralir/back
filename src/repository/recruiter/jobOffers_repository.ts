@@ -25,10 +25,18 @@ export class jobOffers_repository {
 
 
 
-    static async addJob(recruiter_id: any, addingJob: any) {
+    static async addJob(recruiter_id: number, addingJob) {
         try {
-            const [addedJob] = await connection.query<ResultSetHeader>('INSERT INTO jobOffers (recruiter_id,remote,organizationName,jobOffer_role,jobOffer_description,country,city) VALUES (?,?,?,?,?,?,?,?)', [recruiter_id.recruiter_id, addingJob.remote, addingJob.organizationName, addingJob.jobOffer_role, addingJob.jobOffer_description, addingJob.country, addingJob.city]);
-            console.log("addedJob", addedJob);
+            console.log("addedJob", addingJob.Remote);
+            console.log("addedJob", addingJob.orgName);
+            console.log("addedJob", addingJob.jobRole);
+            console.log("addedJob", addingJob.jobDescription);
+            console.log("addedJob", addingJob.Country);
+            console.log("addedJob", addingJob.City);
+            console.log("recruiter id", recruiter_id);
+
+            await connection.query<ResultSetHeader>('INSERT INTO jobOffers (recruiter_id,remote,organizationName,jobOffer_role,jobOffer_description,country,city) VALUES (?,?,?,?,?,?,?)', [recruiter_id, addingJob.Remote, addingJob.orgName, addingJob.jobRole, addingJob.jobDescription, addingJob.Country, addingJob.City]);
+
 
         }
         catch (err) {
