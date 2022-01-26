@@ -43,9 +43,5 @@ export async function uploadPdf(base64: string) {
     await fs.writeFileSync(__dirname + '/../../public/pdfs/' + namePdf, buffer)
 
     return namePdf;
-   
-        
-    
-
 
 }
