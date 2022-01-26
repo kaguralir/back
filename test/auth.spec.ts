@@ -2,22 +2,11 @@ import { connection } from "../src/repository/connection";
 import { server } from '../server';
 
 import request from 'supertest'
-import { setUpTestDatabase } from "./setUp";
+
 
 describe('Users ', () => {
 
-    setUpTestDatabase();
-    it('should return all users', async () => {
-        const response = await request(server)
-            .get('/api/user/allCompanies')
-            .expect(200);
-        console.log("respooonse", response);
 
-        expect(response.body).toContainEqual({
-            user_id: expect.any(Number),
-            role: expect.any(String)
-        });
-    })
 
     it('Register user, login and access protected route', async () => {
 
@@ -26,7 +15,6 @@ describe('Users ', () => {
             .post('/api/user/register')
             .send({
                 demo: 0,
-                projectId: 53,
                 email: 'NewRecruiter8',
                 password: 'NewRecruiter8'
             }).expect(201);

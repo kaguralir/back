@@ -26,7 +26,7 @@ export class user_repository {
 
 
     static async getAllCompanies() {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user WHERE role LIKE  '%company%'`);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user WHERE role LIKE  '%recruteur%'`);
 
 
         return rows.map(row => new User({ user_id: row['user_id'], demo: row['demo'], role: row['role'], organizationId: row['organizationId'], projectId: row['projectId'], name: row['name'], email: row['email'], password: row['password'], mobile: row['mobile'], createdAt: row['createdAt'], updatedAt: row['updatedAt'] }));

@@ -15,7 +15,7 @@ export class jobOffers_repository {
 
 
     static async getAllJobOffers() {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers`);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers ORDER BY RAND()`);
 
 
         return rows.map(row => new JobOffers({ jobOffer_id: row['jobOffer_id'], recruiter_id: row['recruiter_id'], available: row['available'], organizationName: row['organizationName'], jobProject_id: row['jobProject_id'], jobOffer_role: row['jobOffer_role'], jobOffer_description: row['jobOffer_description'], createdAt: row['createdAt'], updatedAt: row['updatedAt'] }
@@ -69,6 +69,33 @@ export class jobOffers_repository {
 
     static async getJobByRecruiter(recruiter_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE recruiter_id=?`, [recruiter_id]);
+
+        return rows;
+
+    }
+
+    static async getAVGjobRoleOffer() {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT jobOffer_role,CAST(100*count(*)  / 
+        (SELECT count(*) from jobOffers)AS DECIMAL(4,2))   AS pourcentage  FROM jobOffers group by jobOffer_role;`);
+
+        return rows;
+
+    }
+
+    static async getJobsOfferPerThisYear() {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT updatedAt AS date, count(*) 
+        FROM jobOffers
+        WHERE updatedAt BETWEEN NOW()-INTERVAL 1 YEAR  AND CURRENT_DATE
+        GROUP BY date`);
+
+        return rows;
+
+    }
+
+    static async getNonUpdatedJob() {
+        const [rows] = await connection.query<RowDataPacket[]>(`    SELECT *
+        FROM jobOffers
+        WHERE updatedAt  NOT BETWEEN NOW()-INTERVAL 1 YEAR  AND CURRENT_DATE`);
 
         return rows;
 

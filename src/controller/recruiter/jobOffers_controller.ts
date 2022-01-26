@@ -28,6 +28,60 @@ JobOffersController.get('/allJobs', async (req, res) => {
     }
 });
 
+JobOffersController.get('/getavgjob', async (req, res) => {
+    try {
+        const post = await jobOffers_repository.getAVGjobRoleOffer();
+
+        return res.status(200).json({
+            success: true,
+            count: post.length,
+            data: post
+        });
+    } catch (err) {
+        console.log("err get all jobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+JobOffersController.get('/getjobsthisyear', async (req, res) => {
+    try {
+        const post = await jobOffers_repository.getJobsOfferPerThisYear();
+
+        return res.status(200).json({
+            success: true,
+            count: post.length,
+            data: post
+        });
+    } catch (err) {
+        console.log("err get all jobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+JobOffersController.get('/getnonupdatedjobs', async (req, res) => {
+    try {
+        const post = await jobOffers_repository.getNonUpdatedJob();
+
+        return res.status(200).json({
+            success: true,
+            count: post.length,
+            data: post
+        });
+    } catch (err) {
+        console.log("err get all jobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+
+
 
 
 JobOffersController.post('/addJob', passport.authenticate('jwt', { session: false }), async (req, res) => {

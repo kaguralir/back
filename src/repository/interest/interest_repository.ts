@@ -12,12 +12,11 @@ export class interest_repository {
 
     static async candidateInterest(job_id: number, candidate_id: number) {
         try {
-            /*     await connection.query<ResultSetHeader>('INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)',
-                    [job_id, candidate_id]); //work*/
+
 
             const [rows] = await connection.query<ResultSetHeader>(
                 `INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)`,
-                [job_id, candidate_id]);//works too
+                [job_id, candidate_id])
 
         }
         catch (err) {
