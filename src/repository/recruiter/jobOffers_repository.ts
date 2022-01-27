@@ -23,6 +23,13 @@ export class jobOffers_repository {
 
     }
 
+    static async getJobsWithoutCandidateInterest(user_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers LEFT OUTER JOIN interest ON jobOffer_id=jobApplied_id WHERE jobApplied_id IS NULL OR recruiterJobOffer_id IS NOT NULL AND interest IS NULL AND candidateWhoApplied_id=?;`, [user_id]);
+
+        return rows;
+
+    }
+
 
 
     static async addJob(recruiter_id: number, addingJob) {

@@ -52,9 +52,11 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
     try {
         const actualRole = req.user['role'];
 
-        if (actualRole == "candidat") {
-            const job_id = req.body.jobApplied_id;
+        if (actualRole == "Candidat") {
+            const job_id = req.body.job;
             const candidat_id = req.user['user_id'];
+            console.log("REQ BODY", req.body);
+
             const interestExists = await interest_repository.getInterestedRecruiterPerJob(job_id, candidat_id);
 
 
