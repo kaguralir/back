@@ -99,9 +99,11 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
         else {
 
 
-            const jobApplied_id = req.body.jobApplied_id;
-            const candidat_id = req.body.candidateWhoApplied_id;
+            const jobApplied_id = req.body.job;
+            const candidat_id = req.body.candidate_id;
             const recruiter_id = req.user['user_id']
+            console.log("req body", req.body);
+
 
             const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
             console.log("candidate interest", candidateInterest);
@@ -125,7 +127,7 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
             if (!candidateInterest) {
                 const recruiterInterest = await interest_repository.recruiterInterest(jobApplied_id, candidat_id, req.user['user_id']);
-                console.log("recruiter interest", jobApplied_id, candidat_id, req.user['user_id']);
+                console.log("recruiter FIRST interest", jobApplied_id, candidat_id, req.user['user_id']);
 
                 return res.status(200).json({
                     success: true,

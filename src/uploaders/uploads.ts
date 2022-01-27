@@ -1,20 +1,13 @@
-import multer from 'multer';
-import path from 'path';
 import { randomUUID } from 'crypto';
 import sharp from 'sharp';
-import { Uploads } from '../entity/uploads_entity';
-import { Duplex } from 'stream';
 const fs = require("fs");
-import { dirname } from 'path';
 
-const sharpStream = sharp({
-    failOnError: false
-});
+
 export async function uploadImage(base64: string) {
     /*   const body = await got(base64).buffer();
       console.log("body", body);
    */
-    const baseImage = randomUUID() + '.jpeg';
+    const baseImage = randomUUID() + '.png';
     const uri = base64.split(';base64,').pop()
     const buffer = Buffer.from(uri, 'base64url');
     const img = sharp(buffer)
@@ -28,7 +21,7 @@ export async function uploadImage(base64: string) {
         .catch(err => {
             console.error("Error sharp promise", err);
         });
-    console.log("base ilage", baseImage);
+    console.log("base image", baseImage);
 
 
     return baseImage;

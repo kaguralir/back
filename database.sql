@@ -40,10 +40,14 @@ CREATE TABLE uploads(
 );
 
 DROP TABLE IF EXISTS skillsCandidate;
-CREATE TABLE skillsCandidate (
+CREATE TABLE skills (
   skillsCandidate_id INTEGER AUTO_INCREMENT PRIMARY KEY,
-  job_id INTEGER(100),
-  CONSTRAINT FK_job_id FOREIGN KEY (job_id) REFERENCES searchedJob(searchedJob_id)
+  jobSkills_id INTEGER(100),
+  CONSTRAINT FK_job_id FOREIGN KEY (jobSkills_id) REFERENCES searchedJob(searchedJob_id),
+  skills VARCHAR(100),
+  hobbies VARCHAR(100),
+  softSkills VARCHAR(100)
+  
 );
 DROP TABLE IF EXISTS jobOffers;
 CREATE TABLE jobOffers(

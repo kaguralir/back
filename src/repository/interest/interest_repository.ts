@@ -18,6 +18,9 @@ export class interest_repository {
                 `INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)`,
                 [job_id, candidate_id])
 
+            console.log("ROWS INTEREST", rows);
+
+
         }
         catch (err) {
             console.log("add application repo err is", err)
@@ -66,6 +69,7 @@ export class interest_repository {
 
 
     static async recruiterInterest(job_id: number, candidat_id: number, recruiter_id: number) {
+        console.log("RECRUITER", job_id, candidat_id, recruiter_id);
 
         await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id) VALUES (?,?,?)`, [job_id, candidat_id, recruiter_id]);
     }
@@ -141,11 +145,9 @@ export class interest_repository {
         }
     }
     static async getJobCandidatesWithoutInterestByJob(job_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat"`, [job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   LEFT OUTER JOIN uploads ON user_id=userUploader_id LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat" ;`, [job_id]);
 
-        return rows.map(row => new User({
-            user_id: row['user_id']
-        }));
+        return rows;
 
     }
 
