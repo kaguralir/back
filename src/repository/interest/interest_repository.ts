@@ -145,7 +145,7 @@ export class interest_repository {
         }
     }
     static async getJobCandidatesWithoutInterestByJob(job_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   LEFT OUTER JOIN uploads ON user_id=userUploader_id LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat" GROUP BY user_id ;`, [job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   INNER JOIN uploads ON user_id=userUploader_id  LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE 3 OR jobApplied_id IS NULL AND role="candidat" AND fileName IS NOT NULL  GROUP BY user_id`, [job_id]);
 
         return rows;
 
