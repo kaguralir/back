@@ -36,18 +36,18 @@ CREATE TABLE uploads(
   pdfFileName VARCHAR(100),
   jobOffer_id INTEGER (100),
   CONSTRAINT FK_jobOffer_id FOREIGN KEY (jobOffer_id) REFERENCES jobOffers (jobOffer_id)
-
 );
-
-DROP TABLE IF EXISTS skillsCandidate;
+DROP TABLE IF EXISTS skills;
 CREATE TABLE skills (
-  skillsCandidate_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  skills_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   jobSkills_id INTEGER(100),
-  CONSTRAINT FK_job_id FOREIGN KEY (jobSkills_id) REFERENCES searchedJob(searchedJob_id),
+  CONSTRAINT FK_jobSkills_id FOREIGN KEY (jobSkills_id) REFERENCES searchedJob(searchedJob_id),
+  candidatSkills_id INTEGER(100),
+  CONSTRAINT FK_candidatSkills_id FOREIGN KEY (candidatSkills_id) REFERENCES user(user_id),
   skills VARCHAR(100),
-  hobbies VARCHAR(100),
-  softSkills VARCHAR(100)
-  
+  softSkills VARCHAR(100),
+  hobbies VARCHAR(100)
+
 );
 DROP TABLE IF EXISTS jobOffers;
 CREATE TABLE jobOffers(
@@ -94,7 +94,7 @@ DROP TABLE IF EXISTS interviews;
 CREATE TABLE interviews(
   interviews_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   interviewOnKanban_id INTEGER(100),
-  CONSTRAINT FK_interviewOnKanban_id  FOREIGN KEY (interviewOnKanban_id) REFERENCES kanbanRecruiter(kanbanRecruiter_id),
+  CONSTRAINT FK_interviewOnKanban_id FOREIGN KEY (interviewOnKanban_id) REFERENCES kanbanRecruiter(kanbanRecruiter_id),
   mode VARCHAR(100),
   note VARCHAR(100),
   pickedDate DATE,
