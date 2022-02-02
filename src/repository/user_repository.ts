@@ -26,7 +26,7 @@ export class user_repository {
     }
 
     static async getProfile(user_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user CROSS  JOIN uploads ON user_id = userUploader_id WHERE user_id=?', [user_id]);
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user WHERE user_id=?', [user_id]);
 
         return rows;
 

@@ -132,22 +132,14 @@ UserController.get('/getProfile/:user_id', async (req, res) => {
         const allUploads: Uploads[] = [];
         for (const row of allUploads) {
             let uploads = new Uploads(req.body);
-            uploads.fileName = row['fileName'];
-            uploads.pdfFileName = row['pdfFileName'];
-
-            if(allUploads.length == 1){
-                let person = new User(User);
-                person.user_id = (Number(req.params.user_id));
-                console.log("rows user", person);
-                await user_repository.findById((Number(req.params.user_id)));
-
-                return person;
-            }
+        
             allUploads.push(uploads);
         }
+       const user= await user_repository.getProfile((Number(req.params.user_id)));
+
         return res.status(200).json({
             success: true,
-            data: userUploads
+            data: userUploads,user
         });
     } catch (err) {
         console.log("err", err);
