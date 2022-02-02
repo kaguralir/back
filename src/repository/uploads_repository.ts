@@ -13,7 +13,18 @@ export class uploads_repository {
      
         return rows;
     }
+    static async getSearchedJob(user_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM searchedJob WHERE candidat_id=?', [user_id]);
 
+        return rows;
+
+    }
+    static async getSkillsForSearchedJob(user_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM skills WHERE candidatSkills_id=?', [user_id]);
+
+        return rows;
+
+    }
 
     
 }

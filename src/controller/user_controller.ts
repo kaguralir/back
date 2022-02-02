@@ -101,14 +101,14 @@ UserController.post('/register', async (req, res, next) => {
             // console.log("NEW IMAGES", image);
 
         }
-        
+
 
         const pdfFile = await uploadPdf(req.body.pdf)
         newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })
         await user_repository.addUser(newUser);
 
         console.log("NEW PDF", pdfFile);
-        
+
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
             user: newUser,
@@ -132,14 +132,14 @@ UserController.get('/getProfile/:user_id', async (req, res) => {
         const allUploads: Uploads[] = [];
         for (const row of allUploads) {
             let uploads = new Uploads(req.body);
-        
+
             allUploads.push(uploads);
         }
-       const user= await user_repository.getProfile((Number(req.params.user_id)));
+        const user = await user_repository.getProfile((Number(req.params.user_id)));
 
         return res.status(200).json({
             success: true,
-            data: userUploads,user
+            data: userUploads, user
         });
     } catch (err) {
         console.log("err", err);
@@ -154,3 +154,26 @@ UserController.get('/getProfile/:user_id', async (req, res) => {
 
 
 
+UserController.get('/getSearchedJob/:user_id', async (req, res) => {
+    try {
+        const userUploads = await uploads_repository.findByPerson(Number(req.params.user_id));
+        const allUploads: Uploads[] = [];
+        for (const row of allUploads) {
+            let uploads = new Uploads(req.body);
+
+            allUploads.push(uploads);
+        }
+        const user = await user_repository.getProfile((Number(req.params.user_id)));
+
+        return res.status(200).json({
+            success: true,
+            data: userUploads, user
+        });
+    } catch (err) {
+        console.log("err", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
