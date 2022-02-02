@@ -1,6 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { User } from "../entity/user_entity";
 import { connection } from "./connection";
+import { uploads_repository } from "./uploads_repository";
 
 
 export class user_repository {
@@ -16,6 +17,14 @@ export class user_repository {
         return null;
 
     }
+
+    static async findById(user_id:number, withUploads = false): Promise<User> {
+        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM user",[user_id]);
+        
+ 
+        return null;
+    }
+
     static async getProfile(user_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM user CROSS  JOIN uploads ON user_id = userUploader_id WHERE user_id=?', [user_id]);
 

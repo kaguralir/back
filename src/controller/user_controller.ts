@@ -1,5 +1,7 @@
 import { NextFunction, Router } from "express";
 import { user_repository } from "../repository/user_repository";
+import { uploads_repository } from "../repository/uploads_repository";
+
 import { User } from '../entity/user_entity';
 import bcrypt from 'bcrypt';
 import { generateToken } from "../../utils/token";
@@ -126,11 +128,26 @@ UserController.post('/register', async (req, res, next) => {
 
 UserController.get('/getProfile/:user_id', async (req, res) => {
     try {
-        const profileUser = await user_repository.getProfile(Number(req.params.user_id));
+        const userUploads = await uploads_repository.findByPerson(Number(req.params.user_id));
+        const allUploads: Uploads[] = [];
+        for (const row of allUploads) {
+            let uploads = new Uploads(req.body);
+            uploads.fileName = row['fileName'];
+            uploads.pdfFileName = row['pdfFileName'];
 
+            if(allUploads.length == 1){
+                let person = new User(User);
+                person.user_id = (Number(req.params.user_id));
+                console.log("rows user", person);
+                await user_repository.findById((Number(req.params.user_id)));
+
+                return person;
+            }
+            allUploads.push(uploads);
+        }
         return res.status(200).json({
             success: true,
-            data: profileUser
+            data: userUploads
         });
     } catch (err) {
         console.log("err", err);
