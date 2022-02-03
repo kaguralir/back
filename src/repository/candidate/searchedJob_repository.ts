@@ -56,11 +56,10 @@ export class searchedJob_repository {
 
     }
 
-    static async updateSearch(candidatSkills_id: number, jobSearch_id: number, updateSearch) {
+    static async updateSearch(candidat_id: number, jobSearch_id: number, updateSearch) {
         try {
-            console.log("UPDATE SEARCH", candidatSkills_id);
-            console.log("UPDATE SEARCH", candidatSkills_id);
-            const [row2] = await connection.query<ResultSetHeader>(`UPDATE  skillsCandidate SET skill1=?,skill2=?,skill3=?,skill4=?,skill5=?, softSkill1=?, softSkill2=?,softSkill3=?,hobby1=?,hobby2=?,hobby3=? WHERE candidatSkills_id=?  `, [updateSearch.candidateSkills.skill1, updateSearch.candidateSkills.skill2, updateSearch.candidateSkills.skill3, updateSearch.candidateSkills.skill4, updateSearch.candidateSkills.skill5, updateSearch.candidateSkills.softSkill1, , updateSearch.candidateSkills.softSkill2, , updateSearch.candidateSkills.softSkill3, updateSearch.candidateSkills.hobby1, updateSearch.candidateSkills.hobby2, updateSearch.candidateSkills.hobby3, candidatSkills_id]);
+
+            const [row2] = await connection.query<ResultSetHeader>(`UPDATE  skillsCandidate SET skill1=?, skill2=?, skill3=?, skill4=?, skill5=?, softSkill1=?, softSkill2=?, softSkill3=?, hobby1=?, hobby2=?, hobby3=? WHERE candidatSkills_id=?  `, [updateSearch.candidateSkills.skill1, updateSearch.candidateSkills.skill2, updateSearch.candidateSkills.skill3, updateSearch.candidateSkills.skill4, updateSearch.candidateSkills.skill5, updateSearch.candidateSkills.softSkill1, updateSearch.candidateSkills.softSkill2, updateSearch.candidateSkills.softSkill3, updateSearch.candidateSkills.hobby1, updateSearch.candidateSkills.hobby2, updateSearch.candidateSkills.hobby3, candidat_id]);
 
             const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET remote=?, beginDate=?, city=?, country=?,  car_ownership=?, job_title=?, description=?, projects=? WHERE searchedJob_id=?`, [updateSearch.remote, updateSearch.beginDate, updateSearch.city, updateSearch.country, updateSearch.car_owernship, updateSearch.job_title, updateSearch.description, updateSearch.projects, jobSearch_id]);
             console.log("row1", row1);
