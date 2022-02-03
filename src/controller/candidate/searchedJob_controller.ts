@@ -75,29 +75,23 @@ SearchedJobController.post('/addSearch', passport.authenticate('jwt', { session:
 });
 
 
-// UserController.get('/getSearchJob/:user_id', async (req, res) => {
-//     try {
-//         const userUploads = await uploads_repository.findByPerson(Number(req.params.user_id));
-//         const allUploads: Uploads[] = [];
-//         for (const row of allUploads) {
-//             let uploads = new Uploads(req.body);
+SearchedJobController.get('/getSearchJob/:user_id', async (req, res) => {
+    try {
+        const userSearch = await searchedJob_repository.getSearchedJobByCandidate(Number(req.params.user_id));
 
-//             allUploads.push(uploads);
-//         }
-//         const user = await user_repository.getProfile((Number(req.params.user_id)));
 
-//         return res.status(200).json({
-//             success: true,
-//             data: userUploads, user
-//         });
-//     } catch (err) {
-//         console.log("err", err);
-//         return res.status(500).json({
-//             success: false,
-//             error: 'Server Error'
-//         });
-//     }
-// });
+        return res.status(200).json({
+            success: true,
+            data: userSearch,
+        });
+    } catch (err) {
+        console.log("err", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
 
 
 
