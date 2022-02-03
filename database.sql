@@ -15,16 +15,14 @@ CREATE TABLE searchedJob(
   candidat_id INTEGER (100),
   CONSTRAINT FK_candidat_id FOREIGN KEY (candidat_id) REFERENCES user(user_id),
   available TINYINT DEFAULT(1),
-  everywhere TINYINT(1),
-  remote TINYINT(1),
+  remote VARCHAR(20),
   beginDate DATE,
   city VARCHAR(100),
-  region VARCHAR (100),
-  mobile INTEGER (255),
-  job VARCHAR(100),
-  category VARCHAR(100),
+  country VARCHAR (100),
+  car_ownership  TINYINT (1),
+  job_title VARCHAR(100),
   description VARCHAR(100),
-  portfolio VARCHAR(100),
+  projects VARCHAR(100),
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 DROP TABLE IF EXISTS uploads;
@@ -37,6 +35,7 @@ CREATE TABLE uploads(
   jobOffer_id INTEGER (100),
   CONSTRAINT FK_jobOffer_id FOREIGN KEY (jobOffer_id) REFERENCES jobOffers (jobOffer_id)
 );
+
 DROP TABLE IF EXISTS skills;
 CREATE TABLE skills (
   skills_id INTEGER AUTO_INCREMENT PRIMARY KEY,
