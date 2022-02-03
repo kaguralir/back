@@ -40,10 +40,12 @@ SearchedJobController.post('/addSearch', passport.authenticate('jwt', { session:
         const newSearch = await new SearchedJob(req.body);
         console.log("REQ BODY", req.body);
 
-        const searchExists = await searchedJob_repository.getSearchedJobExists(newSearch.candidat_id);
+        const searchExists = await searchedJob_repository.getSearchedJobExists(req.user['user_id']);
+        console.log("EXISTS", searchExists);
+
         if (searchExists) {
             const jobId = searchExists.searchedJob_id;
-            const candidateNewInterest = await searchedJob_repository.updateSearch(req.body['user_id'], jobId, req.body);
+            const candidateNewInterest = await searchedJob_repository.updateSearch(req.user['user_id'], jobId, req.body);
 
             return res.status(200).json({
                 success: true,
@@ -52,10 +54,10 @@ SearchedJobController.post('/addSearch', passport.authenticate('jwt', { session:
             });
 
         }
-        newSearch.candidateSkills = new skillsEntity(req.body)
+        newSearch.candidateSkills = new skillsEntity(req.body.candidateSkills)
 
 
-        await searchedJob_repository.addSearch(req.body['user_id'], newSearch);
+        await searchedJob_repository.addSearch(req.user['user_id'], newSearch);
 
         console.log("SKILLS ARE : ", newSearch.candidateSkills);
 

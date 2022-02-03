@@ -36,16 +36,43 @@ CREATE TABLE uploads(
   CONSTRAINT FK_jobOffer_id FOREIGN KEY (jobOffer_id) REFERENCES jobOffers (jobOffer_id)
 );
 
-DROP TABLE IF EXISTS skills;
-CREATE TABLE skills (
+DROP TABLE IF EXISTS skillsCandidate;
+CREATE TABLE skillsCandidate (
+  skills_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  candidatSkills_id INTEGER(100),
+  CONSTRAINT FK_candidatSkills_id FOREIGN KEY (candidatSkills_id) REFERENCES user(user_id),
+  skill1 VARCHAR(100),
+  skill2 VARCHAR(100),
+  skill3 VARCHAR(100),
+  skill4 VARCHAR(100),
+  skill5 VARCHAR(100),
+  softSkill1 VARCHAR(100),
+  softSkill2 VARCHAR(100),
+  softSkill3 VARCHAR(100),
+  hobby1 VARCHAR(100),
+  hobby2 VARCHAR(100),
+  hobby3 VARCHAR(100)
+
+);
+
+DROP TABLE IF EXISTS skillsOffers;
+CREATE TABLE skillsOffers (
   skills_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   jobSkills_id INTEGER(100),
   CONSTRAINT FK_jobSkills_id FOREIGN KEY (jobSkills_id) REFERENCES searchedJob(searchedJob_id),
-  candidatSkills_id INTEGER(100),
-  CONSTRAINT FK_candidatSkills_id FOREIGN KEY (candidatSkills_id) REFERENCES user(user_id),
-  skills VARCHAR(100),
-  softSkills VARCHAR(100),
-  hobbies VARCHAR(100)
+  skill1 VARCHAR(100),
+  skill2 VARCHAR(100),
+  skill3 VARCHAR(100),
+  skill4 VARCHAR(100),
+  skill5 VARCHAR(100),
+  softSkill1 VARCHAR(100),
+  softSkill2 VARCHAR(100),
+  softSkill3 VARCHAR(100),
+  hobby1 VARCHAR(100),
+  hobby2 VARCHAR(100),
+  hobby3 VARCHAR(100)
+
+
 
 );
 DROP TABLE IF EXISTS jobOffers;
