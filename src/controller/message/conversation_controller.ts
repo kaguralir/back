@@ -7,6 +7,22 @@ import { conversations_repository } from "../../repository/message/conversation_
 
 export const ConversationsController = Router();
 
+ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
+    try {
+        const interest = await conversations_repository.getAllMutualInterestPerUser((Number(req.params.user_id)));
+
+        return res.status(200).json({
+            success: true,
+            data: interest
+        });
+    } catch (err) {
+        console.log("err  is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
 ConversationsController.get('/convoPerInterest/:mutualInterest_id', async (req, res) => {
     try {
         const convo = await conversations_repository.getAllMessagesPerMutualInterest(Number(req.params.mutualInterest_id));

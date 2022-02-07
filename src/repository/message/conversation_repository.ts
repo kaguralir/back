@@ -13,10 +13,7 @@ export class conversations_repository {
     static async getAllMessagesPerMutualInterest(mutual: number) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualInterest_id=?', [mutual]);
         if (rows.length === 1) {
-            return new Conversations({
-                conversation_id: rows[0].conversation_id, mutualThumbsUp_interest: rows[0].mutualTInterest_id, sender_id: rows[0].sender_id, messageSend: rows[0].messageSend, sendDate: rows[0].sendDate
-            });
-        }
+            return  rows};
         return null;
 
     }
@@ -41,6 +38,22 @@ export class conversations_repository {
                 return new Interest(row[0]['interest_id'], row[0]['jobApplied_id'], row[0]['candidateWhoApplied_id'], row[0]['recruiterJobOffer_id'], row[0]['interest']);
 
             }
+            return null;
+        }
+        catch (err) {
+            console.log(" get one mutual Interest error", err);
+
+        }
+
+    }
+    static async getAllMutualInterestPerUser( user_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE candidateWhoApplied_id = ?  AND interest=1`, [user_id]);
+
+            console.log(row);
+
+            if (row.length === 1) {
+                return row }
             return null;
         }
         catch (err) {

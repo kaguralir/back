@@ -36,6 +36,7 @@ CREATE TABLE uploads(
   CONSTRAINT FK_jobOffer_id FOREIGN KEY (jobOffer_id) REFERENCES jobOffers (jobOffer_id)
 );
 
+DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS skillsCandidate;
 CREATE TABLE skillsCandidate (
   skills_id INTEGER AUTO_INCREMENT PRIMARY KEY,

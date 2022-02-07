@@ -7,6 +7,7 @@ import { configurePassport } from './utils/token'
 import passport from 'passport';
 import multer from 'multer';
 import { SearchedJobController } from './src/controller/candidate/searchedJob_controller';
+import { ConversationsController } from './src/controller/message/conversation_controller';
 
 
 
@@ -28,6 +29,9 @@ server.use('/api/user', UserController);
 server.use('/api/jobOffers', JobOffersController);
 server.use('/api/interest', InterestController);
 server.use('/api/searchedJob', SearchedJobController);
+server.use('/api/conversation', ConversationsController);
+
+
 
 
 
