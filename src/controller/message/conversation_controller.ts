@@ -13,26 +13,31 @@ export const ConversationsController = Router();
 ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
     try {
         const interest = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.params.user_id)));
-
-        interest.map((item, i) =>
-            console.log(item.jobApplied_id),
-        )
+        /* 
+                interest.map((item, i) =>
+                    console.log(item.jobApplied_id),
+                ) */
         const allUploads: Uploads[] = [];
-
+        const jobPerInterest: jobOffer[] = [];
 
         for (const oneInterest of interest) {
 
             const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
+            let job = new jobOffer(userJoboffer);
+            jobPerInterest.push(job);
+            /*       console.log("job controller", job); */
 
-            console.log("job controller", userJoboffer);
+            const userUploads = await uploads_repository.candidateFindUploadsPerUser(oneInterest.jobApplied_id);
 
-            const userUploads = await uploads_repository.findUploadsPerUser(oneInterest.recruiterJobOffer_id);
+
             let uploads = new Uploads(userUploads);
+
             allUploads.push(uploads);
+
         }
         return res.status(200).json({
             success: true,
-            data: interest, allUploads
+            data: interest, allUploads, jobPerInterest
         });
     } catch (err) {
         console.log("err  is", err);
