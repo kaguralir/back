@@ -128,7 +128,7 @@ UserController.post('/register', async (req, res, next) => {
 
 UserController.get('/getProfile/:user_id', async (req, res) => {
     try {
-        const userUploads = await uploads_repository.findByPerson(Number(req.params.user_id));
+        const userUploads = await uploads_repository.findUploadsPerUser(Number(req.params.user_id));
         const allUploads: Uploads[] = [];
         for (const row of allUploads) {
             let uploads = new Uploads(req.body);
@@ -156,7 +156,7 @@ UserController.get('/getProfile/:user_id', async (req, res) => {
 
 UserController.get('/getSearchedJob/:user_id', async (req, res) => {
     try {
-        const userUploads = await uploads_repository.findByPerson(Number(req.params.user_id));
+        const userUploads = await uploads_repository.findUploadsPerUser(Number(req.params.user_id));
         const allUploads: Uploads[] = [];
         for (const row of allUploads) {
             let uploads = new Uploads(req.body);

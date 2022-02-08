@@ -6,11 +6,22 @@ import { user_repository } from "./user_repository";
 
 export class uploads_repository {
 
+    static async findJobPerId(job_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM user   JOIN uploads ON user_id=userUploader_id JOIN joboffers ON user_id= recruiter_id WHERE joboffers.jobOffer_id =?", [job_id]);
+        console.log("job_id uploads_repository", job_id);
+        console.log("rows uploads_repository", rows);
 
-    static async findByPerson(user_id: number, withPerson = false) {
+
+
+        return rows;
+    }
+    static async findUploadsPerUser(user_id: number, withPerson = false) {
         const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM uploads WHERE userUploader_id=?", [user_id]);
-        
-     
+        /*    console.log("user", user_id);
+           console.log("rows", rows); */
+
+
+
         return rows;
     }
     static async getSearchedJob(user_id: number) {
@@ -26,7 +37,7 @@ export class uploads_repository {
 
     }
 
-    
+
 }
 
 

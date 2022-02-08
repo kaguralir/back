@@ -13,7 +13,8 @@ export class conversations_repository {
     static async getAllMessagesPerMutualInterest(mutual: number) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualInterest_id=?', [mutual]);
         if (rows.length === 1) {
-            return  rows};
+            return rows
+        };
         return null;
 
     }
@@ -28,7 +29,7 @@ export class conversations_repository {
 
     }
 
-    static async getOneMutualInterest( interest_id: number) {
+    static async getOneMutualInterest(interest_id: number) {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE interest_id = ?  AND interest=1`, [interest_id]);
 
@@ -46,15 +47,28 @@ export class conversations_repository {
         }
 
     }
-    static async getAllMutualInterestPerUser( user_id: number) {
+    static async candidateAllMutualInterestPerUser(user_id: number) {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE candidateWhoApplied_id = ?  AND interest=1`, [user_id]);
 
             console.log(row);
 
-            if (row.length === 1) {
-                return row }
-            return null;
+            return row;
+        }
+        catch (err) {
+            console.log(" get one mutual Interest error", err);
+
+        }
+
+    }
+
+    static async getInterestProfile(user_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE candidateWhoApplied_id = ?  AND interest=1`, [user_id]);
+
+            console.log(row);
+
+            return row;
         }
         catch (err) {
             console.log(" get one mutual Interest error", err);
