@@ -1,13 +1,18 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { Uploads } from "../entity/uploads_entity";
+import { User } from "../entity/user_entity";
 import { connection } from "./connection";
 import { user_repository } from "./user_repository";
 
 
 export class uploads_repository {
 
+
+
+
+
     static async findJobPerId(job_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM user   JOIN  joboffers ON user_id= recruiter_id WHERE joboffers.jobOffer_id =?", [job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM interest JOIN joboffers ON jobApplied_id = jobOffer_id JOIN uploads ON joboffers.recruiter_id= userUploader_id JOIN user ON joboffers.recruiter_id=user_id WHERE joboffers.jobOffer_id =?;", [job_id]);
         /* console.log("job_id uploads_repository", job_id);
         console.log("rows uploads_repository", rows); */
 

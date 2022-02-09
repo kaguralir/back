@@ -13,10 +13,7 @@ export const ConversationsController = Router();
 ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
     try {
         const interest = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.params.user_id)));
-        /* 
-                interest.map((item, i) =>
-                    console.log(item.jobApplied_id),
-                ) */
+
         const allUploads: Uploads[] = [];
         const jobPerInterest: jobOffer[] = [];
 
@@ -25,10 +22,8 @@ ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
             const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
             let job = new jobOffer(userJoboffer);
             jobPerInterest.push(job);
-            /*       console.log("job controller", job); */
 
             const userUploads = await uploads_repository.candidateFindUploadsPerUser(oneInterest.jobApplied_id);
-
 
             let uploads = new Uploads(userUploads);
 

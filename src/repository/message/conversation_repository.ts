@@ -48,7 +48,6 @@ export class conversations_repository {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE candidateWhoApplied_id = ?  AND interest=1`, [user_id]);
 
-            console.log(row);
 
             return row;
         }

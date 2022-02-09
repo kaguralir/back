@@ -102,6 +102,9 @@ UserController.post('/register', async (req, res, next) => {
 
         }
 
+        console.log("NEW IMAGES", newImages);
+
+
 
         const pdfFile = await uploadPdf(req.body.pdf)
         newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })

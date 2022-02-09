@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { User } from "../user_entity";
 
 export class jobOffer {
 
@@ -13,6 +14,7 @@ export class jobOffer {
   public country: string;
   public city: string;
   public updatedAt: Date;
+  public user: User;
 
 
   constructor(params) {

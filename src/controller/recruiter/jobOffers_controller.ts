@@ -84,7 +84,7 @@ JobOffersController.get('/getnonupdatedjobs', async (req, res) => {
 JobOffersController.get('/getJobsWithoutCandidateInterest', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const candidate_id = req.user['user_id'];
-        console.log("candidate id", candidate_id);
+
 
         const getJobs = await jobOffers_repository.getJobsWithoutCandidateInterest(candidate_id);
 
