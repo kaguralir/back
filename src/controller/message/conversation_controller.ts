@@ -48,25 +48,25 @@ ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
     }
 });
 
-ConversationsController.get('/InterestProfile/:user_id', async (req, res) => {
-    try {
-        const interest = await conversations_repository.candidateAllMutualInterestPerUser(Number(req.params.user_id));
-        console.log("interest", interest);
+// ConversationsController.get('/InterestProfile/:user_id', async (req, res) => {
+//     try {
+//         const interest = await conversations_repository.candidateAllMutualInterestPerUser(Number(req.params.user_id));
+//         console.log("interest", interest);
 
-        const interestProfile = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.params.user_id)));
+//         const interestProfile = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.params.user_id)));
 
-        return res.status(200).json({
-            success: true,
-            data: interest, interestProfile
-        });
-    } catch (err) {
-        console.log("err", err);
-        return res.status(500).json({
-            success: false,
-            error: 'Server Error'
-        });
-    }
-});
+//         return res.status(200).json({
+//             success: true,
+//             data: interest, interestProfile
+//         });
+//     } catch (err) {
+//         console.log("err", err);
+//         return res.status(500).json({
+//             success: false,
+//             error: 'Server Error'
+//         });
+//     }
+// });
 
 ConversationsController.get('/convoPerInterest/:mutualInterest_id', async (req, res) => {
     try {

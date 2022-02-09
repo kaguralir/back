@@ -12,10 +12,7 @@ export class conversations_repository {
 
     static async getAllMessagesPerMutualInterest(mutual: number) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualInterest_id=?', [mutual]);
-        if (rows.length === 1) {
-            return rows
-        };
-        return null;
+        return rows;
 
     }
 
