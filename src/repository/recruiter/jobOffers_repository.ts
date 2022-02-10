@@ -54,6 +54,12 @@ export class jobOffers_repository {
 
 
 
+    static async getOneJob(job_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE jobOffer_id=?`, [job_id]);
+
+        return rows;
+
+    }
 
 
     static async getJobs(candidate_id: number) {

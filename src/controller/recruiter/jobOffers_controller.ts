@@ -170,6 +170,8 @@ JobOffersController.get('/getJobByRecruiter/:recruiter_id', passport.authenticat
     try {
 
         const recruiter_id = req.user['user_id']
+        console.log("recruiter", recruiter_id);
+
         if (recruiter_id) {
             const post = await jobOffers_repository.getJobByRecruiter(Number(req.params.recruiter_id));
 
@@ -179,6 +181,28 @@ JobOffersController.get('/getJobByRecruiter/:recruiter_id', passport.authenticat
                 data: post
             });
         }
+
+    } catch (err) {
+        console.log("err getjobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+
+
+        const post = await jobOffers_repository.getJobByRecruiter(Number(req.params.job_id));
+
+        return res.status(200).json({
+            success: true,
+            data: post
+        });
+
 
     } catch (err) {
         console.log("err getjobs is", err);
