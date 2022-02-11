@@ -91,27 +91,28 @@ UserController.post('/register', async (req, res, next) => {
 
 
         let newImages: Uploads[] = [];
-        if(req.body.file){
-        for (const oneImage of req.body.file) {
-            const baseImage = await uploadImage(oneImage);
-            let image = new Uploads(baseImage);
-            image.fileName = baseImage.toString();
+        if (req.body.file.length > 0) {
+            for (const oneImage of req.body.file) {
+                const baseImage = await uploadImage(oneImage);
+                let image = new Uploads(baseImage);
+                image.fileName = baseImage.toString();
 
-            newImages.push(image);
-            newUser.images = newImages;
-            // console.log("NEW IMAGES", image);
+                newImages.push(image);
+                newUser.images = newImages;
+                // console.log("NEW IMAGES", image);
 
+            }
+
+            /*  console.log("NEW IMAGES", newImages); */
         }
 
-        console.log("NEW IMAGES", newImages);}
 
+        if (req.body.pdf.length > 0) {
+            const pdfFile = await uploadPdf(req.body.pdf)
+            newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })
+            await user_repository.addUser(newUser);
 
-        if (req.body.pdf){
-        const pdfFile = await uploadPdf(req.body.pdf)
-        newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })
-        await user_repository.addUser(newUser);
-
-        console.log("NEW PDF", pdfFile);
+            console.log("NEW PDF", pdfFile);
         }
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
