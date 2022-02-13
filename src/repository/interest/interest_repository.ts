@@ -10,13 +10,13 @@ export class interest_repository {
      * @returns {Promise<Interest[]>} 
      */
 
-    static async candidateInterest(job_id: number, candidate_id: number) {
+    static async candidateInterest(job_id: number, candidate_id: number, interest: any) {
         try {
 
 
             const [rows] = await connection.query<ResultSetHeader>(
-                `INSERT INTO interest (jobApplied_id,candidateWhoApplied_id) VALUES (?,?)`,
-                [job_id, candidate_id])
+                `INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,interest) VALUES (?,?,?)`,
+                [job_id, candidate_id, interest])
 
             console.log("ROWS INTEREST", rows);
 
@@ -68,10 +68,10 @@ export class interest_repository {
 
 
 
-    static async recruiterInterest(job_id: number, candidat_id: number, recruiter_id: number) {
+    static async recruiterInterest(job_id: number, candidat_id: number, recruiter_id: number, interest: any) {
         console.log("RECRUITER", job_id, candidat_id, recruiter_id);
 
-        await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id) VALUES (?,?,?)`, [job_id, candidat_id, recruiter_id]);
+        await connection.query<ResultSetHeader>(`INSERT INTO interest (jobApplied_id,candidateWhoApplied_id,recruiterJobOffer_id,interest) VALUES (?,?,?,?)`, [job_id, candidat_id, recruiter_id, interest]);
     }
 
 
@@ -145,7 +145,7 @@ export class interest_repository {
         }
     }
     static async getJobCandidatesWithoutInterestByJob(job_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   INNER JOIN uploads ON user_id=userUploader_id  LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE 3 OR jobApplied_id IS NULL AND role="candidat" AND fileName IS NOT NULL  GROUP BY user_id`, [job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   INNER JOIN uploads ON user_id=userUploader_id  LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat" AND fileName IS NOT NULL  GROUP BY user_id`, [job_id]);
 
         return rows;
 
