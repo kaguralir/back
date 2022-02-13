@@ -10,10 +10,38 @@ import { uploads_repository } from "../../repository/uploads_repository";
 
 export const ConversationsController = Router();
 
-ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
+ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const interest = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.params.user_id)));
+        console.log("req.user", req.user);
+        const actualRole = req.user['role'];
 
+        if (actualRole == "Candidat") {
+
+            const interest = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.user['user_id'])));
+
+            const allUploads: Uploads[] = [];
+            const jobPerInterest: jobOffer[] = [];
+
+            for (const oneInterest of interest) {
+
+                const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
+                let job = new jobOffer(userJoboffer);
+                jobPerInterest.push(job);
+
+                const userUploads = await uploads_repository.candidateFindUploadsPerUser(oneInterest.jobApplied_id);
+
+                let uploads = new Uploads(userUploads);
+
+                allUploads.push(uploads);
+
+            }
+            return res.status(200).json({
+                success: true,
+                data: interest, allUploads, jobPerInterest
+            });
+        }
+
+        const interest = await conversations_repository.recruiterAllMutualInterestPerUser((Number(req.params.user_id)));
         const allUploads: Uploads[] = [];
         const jobPerInterest: jobOffer[] = [];
 
@@ -30,10 +58,13 @@ ConversationsController.get('/mutualInterest/:user_id', async (req, res) => {
             allUploads.push(uploads);
 
         }
+
         return res.status(200).json({
             success: true,
             data: interest, allUploads, jobPerInterest
         });
+
+
     } catch (err) {
         console.log("err  is", err);
         return res.status(500).json({
@@ -82,10 +113,16 @@ ConversationsController.get('/convoPerInterest/:mutualInterest_id', async (req, 
 
 
 
-ConversationsController.post('/addMessage/:interest_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+ConversationsController.post('/addMessage/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        const newMessage = req.body.messageSend;
-        await conversations_repository.addMessage(Number(req.params.interest_id), req.user['user_id'], newMessage);
+        console.log("req add message", req.body);
+
+        const newMessage = req.body.message;
+        const interestid = req.body.interestId;
+        const sender = req.user['user_id']
+        const newMessageSend = await conversations_repository.addMessage(interestid, sender, newMessage);
+        console.log("newmessageend", interestid, sender, newMessage);
+
         res.status(201).json({
             success: true,
             data: newMessage
@@ -93,7 +130,7 @@ ConversationsController.post('/addMessage/:interest_id', passport.authenticate('
 
     }
     catch (error) {
-        console.log(error);
+        console.log("post messageerror", error);
         res.status(500).json(error);
     }
 });

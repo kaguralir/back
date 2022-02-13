@@ -11,6 +11,8 @@ export class conversations_repository {
      */
 
     static async getAllMessagesPerMutualInterest(mutual: number) {
+        console.log("MUTUAL", mutual);
+
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM conversations WHERE mutualInterest_id=?', [mutual]);
         return rows;
 
@@ -18,6 +20,9 @@ export class conversations_repository {
 
     static async addMessage(mutualInterest_id: number, sender_id: number, message: String) {
         try {
+
+            console.log("sender", sender_id);
+
             await connection.query<ResultSetHeader>('INSERT INTO conversations (mutualInterest_id, sender_id,messageSend) VALUES (?,?,?)', [mutualInterest_id, sender_id, message]);
         }
         catch (err) {
@@ -47,6 +52,20 @@ export class conversations_repository {
     static async candidateAllMutualInterestPerUser(user_id: number) {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE candidateWhoApplied_id = ?  AND interest=1`, [user_id]);
+
+
+            return row;
+        }
+        catch (err) {
+            console.log(" get one mutual Interest error", err);
+
+        }
+
+    }
+
+    static async recruiterAllMutualInterestPerUser(user_id: number) {
+        try {
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE recruiterJobOffer_id = ?  AND interest=1`, [user_id]);
 
 
             return row;
