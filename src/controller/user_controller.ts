@@ -132,7 +132,7 @@ UserController.post('/register', async (req, res, next) => {
 });
 
 
-UserController.get('/getProfile/:user_id', async (req, res) => {
+UserController.get('/getProfile/:user_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const userUploads = await uploads_repository.findUploadsPerUser(Number(req.params.user_id));
         const allUploads: Uploads[] = [];

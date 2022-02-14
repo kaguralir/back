@@ -41,13 +41,14 @@ export class searchedJob_repository {
 
 
     static async addSearch(candidatSkills_id: number, addingSearch) {
+        console.log("added", addingSearch);
+        console.log("added", addingSearch.selectedCity);
         try {
-            const [addedSearch] = await connection.query<ResultSetHeader>('INSERT INTO searchedJob (candidat_id,remote, beginDate, city, country,  car_ownership, job_title, description, projects) VALUES (?,?,?,?,?,?,?,?,?)', [candidatSkills_id, addingSearch.remote, addingSearch.beginDate, addingSearch.city, addingSearch.country, addingSearch.car_owernship, addingSearch.job_title, addingSearch.description, addingSearch.projects]);
+            const [addedSearch] = await connection.query<ResultSetHeader>('INSERT INTO searchedJob (candidat_id,remote, beginDate, city, country,  car_ownership, job_title, description,skill1,skill2,skill3, softSkill1, softSkill2,softSkill3,hobby1,hobby2,hobby3) VALUES (?,?,?, ?,?,?, ?,?,? ,?,?,? ,?,?,? ,?,?)', [candidatSkills_id, addingSearch.remote, addingSearch.beginDate, addingSearch.selectedCity, addingSearch.selectedCountry, addingSearch.car_owernship, addingSearch.job_title, addingSearch.description, addingSearch.skill1, addingSearch.skill2, addingSearch.skill3, addingSearch.softSkill1, addingSearch.softSkill2, addingSearch.softSkill3, addingSearch.hobby1, addingSearch.hobby2, addingSearch.hobby3]);
             addingSearch.searchedJob_id = addedSearch.insertId;
             console.log("adding search", addingSearch);
 
 
-            await connection.query<ResultSetHeader>(`INSERT INTO   skillsCandidate (candidatSkills_id, skill1,skill2,skill3,skill4,skill5, softSkill1, softSkill2,softSkill3,hobby1,hobby2,hobby3) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) `, [candidatSkills_id, addingSearch.candidateSkills.skill1, addingSearch.candidateSkills.skill2, addingSearch.candidateSkills.skill3, addingSearch.candidateSkills.skill4, addingSearch.candidateSkills.skill5, addingSearch.candidateSkills.softSkill1, , addingSearch.candidateSkills.softSkill2, , addingSearch.candidateSkills.softSkill3, addingSearch.candidateSkills.hobby1, addingSearch.candidateSkills.hobby2, addingSearch.candidateSkills.hobby3]);
 
         }
         catch (err) {
@@ -79,7 +80,7 @@ export class searchedJob_repository {
 
     static async getSearchedJobByCandidate(candidate_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM searchedJob INNER JOIN skillsCandidate ON candidat_id=candidatSkills_id WHERE candidat_id=?`, [candidate_id]);
-console.log("rows search by candidate",candidate_id);
+        console.log("rows search by candidate", candidate_id);
 
         return rows;
 

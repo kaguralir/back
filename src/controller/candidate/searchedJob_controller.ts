@@ -54,12 +54,12 @@ SearchedJobController.post('/addSearch', passport.authenticate('jwt', { session:
             });
 
         }
-        newSearch.candidateSkills = new skillsEntity(req.body.candidateSkills)
+
 
 
         await searchedJob_repository.addSearch(req.user['user_id'], newSearch);
 
-        console.log("SKILLS ARE : ", newSearch.candidateSkills);
+
 
         res.status(201).json({
             message: 'New search OK',
