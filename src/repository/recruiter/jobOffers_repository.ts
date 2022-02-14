@@ -34,15 +34,32 @@ export class jobOffers_repository {
 
     static async addJob(recruiter_id: number, addingJob) {
         try {
-            console.log("addedJob", addingJob.Remote);
-            console.log("addedJob", addingJob.orgName);
-            console.log("addedJob", addingJob.jobRole);
-            console.log("addedJob", addingJob.jobDescription);
-            console.log("addedJob", addingJob.Country);
-            console.log("addedJob", addingJob.City);
+            console.log("addedJob", addingJob.values.Remote);
+            console.log("addedJob", addingJob.values.orgName);
+            console.log("addedJob", addingJob.values.jobRole);
+            console.log("addedJob", addingJob.values.jobDescription);
+            console.log("addedJob", addingJob.values.Country);
+            console.log("addedJob", addingJob.values.City);
+            console.log("addedJob", addingJob.tagDescription);
+
             console.log("recruiter id", recruiter_id);
 
-            await connection.query<ResultSetHeader>('INSERT INTO jobOffers (recruiter_id,remote,organizationName,jobOffer_role,jobOffer_description,country,city) VALUES (?,?,?,?,?,?,?)', [recruiter_id, addingJob.Remote, addingJob.orgName, addingJob.jobRole, addingJob.jobDescription, addingJob.Country, addingJob.City]);
+            const [addedJob] = await connection.query<ResultSetHeader>('INSERT INTO jobOffers (recruiter_id,remote,organizationName,jobOffer_role,jobOffer_description,country,city) VALUES (?,?,?,?,?,?,?)', [recruiter_id, addingJob.values.Remote, addingJob.values.orgName, addingJob.values.jobRole, addingJob.values.jobDescription, addingJob.values.Country, addingJob.values.City]);
+            addingJob.jobOffer_id = addedJob.insertId;
+            console.log("ADDINDD", addingJob);
+
+            if (addingJob.tagDescription.length > 1) {
+                for (const val of addingJob.tagDescription) {
+                    console.log("val", val);
+
+
+                    await connection.query<ResultSetHeader>(`INSERT INTO jobTags(job_id,description) VALUES(?,?) ;`, [addingJob.jobOffer_id, val]);
+
+                }
+
+            }
+
+
 
 
         }
@@ -82,7 +99,7 @@ export class jobOffers_repository {
 
     static async getJobByRecruiter(recruiter_id: number) {
         console.log("RECRUITER ID", recruiter_id);
-        
+
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE recruiter_id=?`, [recruiter_id]);
 
         return rows;

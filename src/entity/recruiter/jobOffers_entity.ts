@@ -1,3 +1,4 @@
+import { jobTags } from "./tagsEntity";
 
 export class JobOffers {
 
@@ -11,7 +12,7 @@ export class JobOffers {
   public country: string;
   public city: string;
   public updatedAt: Date;
-
+  public tagDescription: jobTags[] = [];
   constructor(params) {
     Object.assign(this, params);
   }
@@ -19,13 +20,3 @@ export class JobOffers {
 
 }
 
-
-/* jobOffer_id 
-recruiter_id 
-available
-organizationName 
-jobProject_id 
-jobOffer_role 
-jobOffer_description 
-createdAt 
-updatedAt  */

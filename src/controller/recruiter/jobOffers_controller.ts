@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { generateToken } from "../../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../../utils/token"
+import { jobTags } from "../../entity/recruiter/tagsEntity";
 
 
 
@@ -107,7 +108,21 @@ JobOffersController.get('/getJobsWithoutCandidateInterest', passport.authenticat
 JobOffersController.post('/addJob', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const newJob = new JobOffers(req.body);
-        console.log("new", newJob);
+        console.log("new", req.body);
+
+        console.log("req.body.tags.length", req.body.tags.length);
+        if (req.body.tags.length > 0) {
+            let newTag: jobTags[] = [];
+
+            for (const oneTag of req.body.tags) {
+                newTag.push(oneTag);
+                newJob.tagDescription = newTag;
+
+            }
+        }
+
+        console.log("NWJOV", newJob);
+
 
         await jobOffers_repository.addJob(req.user['user_id'], newJob);
         res.status(201).json({

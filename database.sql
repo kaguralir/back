@@ -77,6 +77,14 @@ CREATE TABLE skillsOffers (
 
 );
 
+DROP TABLE IF EXISTS jobTags;
+CREATE TABLE jobTags (
+  jobTags_id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  job_id INTEGER(100),
+  CONSTRAINT FK_job_id FOREIGN KEY (job_id) REFERENCES jobOffers(jobOffer_id),
+  description VARCHAR(100)
+);
+
 
 CREATE TABLE jobOffers(
   jobOffer_id INTEGER AUTO_INCREMENT PRIMARY KEY,
