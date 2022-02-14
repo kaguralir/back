@@ -195,7 +195,7 @@ export class interest_repository {
 
     static async getRecruiterAnswer(job_id: number, candidat_id: number) {
         try {
-            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM joboffers JOIN interest ON joboffer_id=jobApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NULL AND interest IS NOT NULL`, [job_id, candidat_id]);
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers JOIN interest ON joboffer_id=jobApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NULL AND interest IS NOT NULL`, [job_id, candidat_id]);
 
             console.log(row);
 

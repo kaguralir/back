@@ -76,7 +76,8 @@ CREATE TABLE skillsOffers (
 
 
 );
-DROP TABLE IF EXISTS jobOffers;
+
+
 CREATE TABLE jobOffers(
   jobOffer_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   recruiter_id INTEGER(100),
