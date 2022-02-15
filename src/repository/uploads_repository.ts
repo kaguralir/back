@@ -34,7 +34,7 @@ export class uploads_repository {
         /*    console.log("user", user_id);
            console.log("rows", rows); */
 
-        return rows.map(row => new Uploads({ userUploader_id: row['userUploader_id'], fileName: row['fileName'], pdfFileName: row['pdfFileName'] }));
+        return rows.map(row => new Uploads({ uploads_id: row['uploads_id'], userUploader_id: row['userUploader_id'], fileName: row['fileName'], pdfFileName: row['pdfFileName'] }));
 
     }
     static async getSearchedJob(user_id: number) {

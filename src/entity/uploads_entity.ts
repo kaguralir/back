@@ -5,6 +5,7 @@ export class Uploads {
 
     public upload_id: number;
     public user: User;
+    public userUploader_id: number;
     public fileName: string;
     public pdfFileName: string;
     public jobOffer_id: number;

@@ -6,6 +6,9 @@ import { generateToken } from "../../../utils/token";
 import passport from "passport";
 import { configurePassport } from "../../../utils/token"
 import { jobTags } from "../../entity/recruiter/tagsEntity";
+import { uploads_repository } from "../../repository/uploads_repository";
+import { Uploads } from "../../entity/uploads_entity";
+import { User } from "../../entity/user_entity";
 
 
 
@@ -221,6 +224,51 @@ JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { ses
 
     } catch (err) {
         console.log("err getjobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const candidate_id = req.user['user_id'];
+
+
+        const getJobs = await jobOffers_repository.getJobsTest(candidate_id);
+
+        let allUploads: Uploads[] = [];
+        for (const job of getJobs) {
+            const user = job.recruiter_id;
+
+            const userUploads = await uploads_repository.findUploadsPerUser(user);
+
+            for (const row of userUploads) {
+
+                if (row.userUploader_id === job.recruiter_id) {
+                    console.log("row", row);
+
+                    job.images = [];
+                    job.images.push(userUploads);
+
+                }
+
+                let uploads = new Uploads(row);
+
+                allUploads.push(uploads);
+
+            }
+
+
+        }
+        return res.status(200).json({
+            success: true,
+            count: getJobs.length,
+            data: getJobs
+        });
+    } catch (err) {
+        console.log("err get all jobs is", err);
         return res.status(500).json({
             success: false,
             error: 'Server Error'

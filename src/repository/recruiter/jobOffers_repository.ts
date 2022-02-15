@@ -31,6 +31,12 @@ export class jobOffers_repository {
     }
 
 
+    static async getJobsTest(user_id: number) {
+        const [rows] = await connection.query<RowDataPacket[]>(` SELECT * FROM jobOffers JOIN user ON recruiter_id=user_id  LEFT OUTER JOIN interest ON jobOffers.jobOffer_id=interest.jobApplied_id WHERE jobApplied_id IS NULL OR recruiterJobOffer_id IS NOT NULL AND interest IS NULL AND candidateWhoApplied_id=?`, [user_id]);
+
+        return rows;
+
+    }
 
     static async addJob(recruiter_id: number, addingJob) {
         try {
