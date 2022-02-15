@@ -18,26 +18,34 @@ ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('j
         if (actualRole == "Candidat") {
 
             const interest = await conversations_repository.candidateAllMutualInterestPerUser((Number(req.user['user_id'])));
-
-            const allUploads: Uploads[] = [];
-            const jobPerInterest: jobOffer[] = [];
-
             for (const oneInterest of interest) {
+                const oneJob = oneInterest.jobApplied_id;
 
-                const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
-                let job = new jobOffer(userJoboffer);
-                jobPerInterest.push(job);
+                const recruiter = await uploads_repository.findRecruiterPerJob(oneJob);
+                console.log("recruiter", recruiter);
 
-                const userUploads = await uploads_repository.candidateFindUploadsPerUser(oneInterest.jobApplied_id);
+                for (const row of recruiter) {
+                    console.log("row", oneInterest.jobApplied_id);
+                    const recruiterUploads = await uploads_repository.findUploadsPerUser(row.recruiter_id);
 
-                let uploads = new Uploads(userUploads);
+                    if (row.jobApplied_id === oneInterest.jobApplied_id) {
 
-                allUploads.push(uploads);
+                        oneInterest.images = [];
+                        oneInterest.job = [];
+
+                        oneInterest.images.push(recruiterUploads);
+                        oneInterest.job.push(recruiter)
+                        console.log("IMAGES", oneInterest.images);
+
+
+                    }
+
+                }
 
             }
             return res.status(200).json({
                 success: true,
-                data: interest, allUploads, jobPerInterest
+                data: interest
             });
         }
 
