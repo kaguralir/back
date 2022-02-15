@@ -279,9 +279,11 @@ JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: f
                     console.log("row", row);
 
                     job.tagDescription = [];
+                    /*                     console.log('jobTags', jobTags);
+                     */
                     job.tagDescription.push(jobTags);
-                    console.log("IMAGES", job.tagDescription);
-
+                    /*                     console.log("IMAGES", job.tagDescription);
+                     */
                 }
             }
         }
