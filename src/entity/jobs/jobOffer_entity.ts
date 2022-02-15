@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { jobTags } from "../recruiter/tagsEntity";
 import { Uploads } from "../uploads_entity";
 import { User } from "../user_entity";
 
@@ -18,6 +19,7 @@ export class jobOffer {
   public user: User;
   public images: Uploads[] = [];
   public pdfs: Uploads;
+  public tagDescription: jobTags[] = [];
 
 
   constructor(params) {

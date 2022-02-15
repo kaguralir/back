@@ -247,21 +247,47 @@ JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: f
             for (const row of userUploads) {
 
                 if (row.userUploader_id === job.recruiter_id) {
-                    console.log("row", row);
+                    /*     console.log("row", row); */
 
                     job.images = [];
                     job.images.push(userUploads);
+                    console.log("IMAGES", job.images);
+
 
                 }
 
-                let uploads = new Uploads(row);
-
-                allUploads.push(uploads);
-
+                /*     let uploads = new Uploads(row);
+    
+                    allUploads.push(uploads);
+     */
             }
 
 
         }
+
+        let tags: jobTags[] = [];
+        for (const job of getJobs) {
+            const oneJob = job.jobOffer_id;
+
+            const jobTags = await uploads_repository.findTagsPerJobs(oneJob);
+            /*        console.log("TAGS", jobTags); */
+
+
+            for (const row of jobTags) {
+
+                if (row.job_id === job.jobOffer_id) {
+                    console.log("row", row);
+
+                    job.tagDescription = [];
+                    job.tagDescription.push(jobTags);
+                    console.log("IMAGES", job.tagDescription);
+
+                }
+            }
+        }
+
+
+
         return res.status(200).json({
             success: true,
             count: getJobs.length,

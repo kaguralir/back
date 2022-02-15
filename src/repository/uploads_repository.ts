@@ -37,6 +37,15 @@ export class uploads_repository {
         return rows.map(row => new Uploads({ uploads_id: row['uploads_id'], userUploader_id: row['userUploader_id'], fileName: row['fileName'], pdfFileName: row['pdfFileName'] }));
 
     }
+
+    static async findTagsPerJobs(job_id: number, withPerson = false) {
+        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM jobTags WHERE job_id=?", [job_id]);
+        /*    console.log("user", user_id);
+           console.log("rows", rows); */
+
+        return rows;
+
+    }
     static async getSearchedJob(user_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>('SELECT * FROM searchedJob WHERE candidat_id=?', [user_id]);
 
