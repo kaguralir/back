@@ -59,13 +59,11 @@ export class searchedJob_repository {
 
     static async updateSearch(candidat_id: number, jobSearch_id: number, updateSearch) {
         try {
+            console.log("UDPATESEARCH", updateSearch);
 
-            const [row2] = await connection.query<ResultSetHeader>(`UPDATE  skillsCandidate SET skill1=?, skill2=?, skill3=?, skill4=?, skill5=?, softSkill1=?, softSkill2=?, softSkill3=?, hobby1=?, hobby2=?, hobby3=? WHERE candidatSkills_id=?  `, [updateSearch.skill1, updateSearch.skill2, updateSearch.skill3, updateSearch.skill4, updateSearch.skill5, updateSearch.softSkill1, updateSearch.softSkill2, updateSearch.softSkill3, updateSearch.hobby1, updateSearch.hobby2, updateSearch.hobby3, candidat_id]);
 
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET remote=?, beginDate=?, city=?, country=?,  car_ownership=?, job_title=?, description=?, projects=? WHERE searchedJob_id=?`, [updateSearch.remote, updateSearch.beginDate, updateSearch.city, updateSearch.country, updateSearch.car_owernship, updateSearch.job_title, updateSearch.description, updateSearch.projects, jobSearch_id]);
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET available=?, remote=?, beginDate=?, city=?, country=?,  car_ownership=?, job_title=?, description=?, skill1=? WHERE searchedJob_id=?`, [updateSearch.available, updateSearch.remote, updateSearch.beginDate, updateSearch.city, updateSearch.country, updateSearch.car_owernship, updateSearch.job_title, updateSearch.description, updateSearch.skill1, jobSearch_id]);
             console.log("row1", row1);
-            console.log("row2", row2);
-
 
 
         }
