@@ -17,7 +17,7 @@ server.use(cors());
 
 
 configurePassport();
-server.use(express.urlencoded({ limit: '2000mb', extended: false, parameterLimit: 50000, type: 'application/x-www-form-urlencoded' }));
+server.use(express.urlencoded({ limit: '10mb', extended: false, parameterLimit: 50000, type: 'application/x-www-form-urlencoded' }));
 server.use(express.text({ limit: '2000mb' }));
 server.use(express.json({ limit: '200mb', type: 'application/json' }));
 server.use(passport.initialize());
