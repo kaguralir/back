@@ -104,20 +104,24 @@ export class jobOffers_repository {
     }
 
     static async getJobByRecruiter(recruiter_id: number) {
-        console.log("RECRUITER ID", recruiter_id);
+
 
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE recruiter_id=?`, [recruiter_id]);
 
-        return rows;
+        return rows.map(row => new jobOffer({
+            jobOffer_id: row['jobOffer_id'], recruiter_id: row['recruiter_id:'], available: row['available'], remote: row['remote'], organizationName: row['organizationName'], jobOffer_role: row['jobOffer_role'], jobOffer_description: row['jobOffer_description'], country: row['country'], city: row['city'], updatedAt: row['updatedAt']
+        }));
 
     }
 
     static async getJobById(job_id: number) {
-        console.log("RECRUITER ID", job_id);
+        console.log("job_id ID", job_id);
 
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE jobOffer_id=?`, [job_id]);
 
-        return rows;
+        return rows.map(row => new jobOffer({
+            jobOffer_id: row['jobOffer_id'], recruiter_id: row['recruiter_id:'], available: row['available'], remote: row['remote'], organizationName: row['organizationName'], jobOffer_role: row['jobOffer_role'], jobOffer_description: row['jobOffer_description'], country: row['country'], city: row['city'], updatedAt: row['updatedAt']
+        }));
 
     }
 
