@@ -159,8 +159,12 @@ export class jobOffers_repository {
         try {
             console.log("UDPATESEARCH", updateSearch);
 
+            console.log("UDPATE2", updateSearch.date);
 
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET available=?, remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=? updatedAt=? WHERE searchedJob_id=?`, [updateSearch.available, updateSearch.remote, updateSearch.organizationName, updateSearch.jobOffer_role, updateSearch.jobOffer_description, updateSearch.country, updateSearch.city, updateSearch.updatedAt, job_id]);
+            const myDate = new Date(updateSearch.date);
+            console.log("MY DATE", myDate);
+
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers  SET available=?, remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=?, updatedAt=CURRENT_TIMESTAMP WHERE jobOffer_id=?`, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
 
         }
         catch (err) {

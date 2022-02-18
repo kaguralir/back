@@ -341,7 +341,7 @@ JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { 
                   }
               } */
 
-        console.log("NWJOV", udpateJob);
+        console.log("udpateJob", udpateJob);
 
 
 
