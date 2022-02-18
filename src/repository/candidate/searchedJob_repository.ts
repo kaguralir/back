@@ -74,6 +74,16 @@ export class searchedJob_repository {
     }
 
 
+    static async deleteTag(jobTags_id: number, job_id: number) {
+        try {
+            await connection.query('DELETE FROM jobTags WHERE jobTags_id=? AND job_id=?', [jobTags_id, job_id]);
+        }
+        catch (err) {
+            console.log("delete tag is", err)
+        }
+
+    }
+
 
 
     static async getSearchedJobByCandidate(candidate_id: number) {

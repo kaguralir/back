@@ -322,3 +322,37 @@ JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: f
         });
     }
 });
+
+
+
+JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+        console.log("new", req.body);
+        const udpateJob = await jobOffers_repository.updateJobOffer(Number(req.params.job_id), req.body);
+        console.log("req.body.tags.length", req.body.tags.length);
+        /*       if (req.body.tags.length > 0) {
+                  let newTag: jobTags[] = [];
+      
+                  for (const oneTag of req.body.tags) {
+                      newTag.push(oneTag);
+                      udpateJob.tagDescription = newTag;
+      
+                  }
+              } */
+
+        console.log("NWJOV", udpateJob);
+
+
+
+        res.status(201).json({
+            success: true,
+            data: udpateJob
+        })
+
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+});

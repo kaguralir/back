@@ -155,6 +155,20 @@ export class jobOffers_repository {
 
     }
 
+    static async updateJobOffer(job_id: number, updateSearch) {
+        try {
+            console.log("UDPATESEARCH", updateSearch);
+
+
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET available=?, remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=? updatedAt=? WHERE searchedJob_id=?`, [updateSearch.available, updateSearch.remote, updateSearch.organizationName, updateSearch.jobOffer_role, updateSearch.jobOffer_description, updateSearch.country, updateSearch.city, updateSearch.updatedAt, job_id]);
+
+        }
+        catch (err) {
+            console.log("adduser repo err is", err)
+        }
+
+    }
+
 }
 
 
