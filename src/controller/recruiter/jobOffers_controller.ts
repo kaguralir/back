@@ -215,24 +215,22 @@ JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { ses
 
 
         const getOneJob = await jobOffers_repository.getJobById(Number(req.params.job_id));
+        let tags: jobTags[] = [];
+
 
         for (const theJob of getOneJob) {
             const jobTags = await uploads_repository.findTagsPerJobs(theJob.jobOffer_id);
-
+            console.log("JOB TAGS", jobTags);
+            theJob.tagDescription = [];
             for (const jobTag of jobTags) {
 
-                if (jobTag.job_id === theJob.jobOffer_id) {
-                    console.log("row", jobTag);
+                console.log(jobTag.description);
+                console.log(theJob.tagDescription);
 
-                    theJob.tagDescription = [];
-                    console.log('oneJob.tagDescription', jobTag.description);
-
-                    theJob.tagDescription.push(jobTag.description);
-
-                }
-                console.log("neJob.tagDescription", theJob.tagDescription);
-
+                theJob.tagDescription.push(jobTag.description);
             }
+            console.log("the job", theJob.tagDescription);
+
 
         }
 

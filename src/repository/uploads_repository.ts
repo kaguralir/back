@@ -38,7 +38,7 @@ export class uploads_repository {
 
     }
 
-    static async findRecruiterPerJob(job_id: number, withPerson = false) {
+    static async findRecruiterPerJob(job_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM jobOffers JOIN interest ON jobOffer_id=jobApplied_id JOIN user ON recruiter_id=user_id  WHERE jobOffers.jobOffer_id=?", [job_id]);
         /*    console.log("user", user_id);
            console.log("rows", rows); */
@@ -49,7 +49,7 @@ export class uploads_repository {
 
 
 
-    static async findTagsPerJobs(job_id: number, withPerson = false) {
+    static async findTagsPerJobs(job_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM jobTags WHERE job_id=?", [job_id]);
         /*    console.log("user", user_id);
            console.log("rows", rows); */

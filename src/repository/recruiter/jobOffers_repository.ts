@@ -118,10 +118,13 @@ export class jobOffers_repository {
         console.log("job_id ID", job_id);
 
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE jobOffer_id=?`, [job_id]);
+        if (rows.length === 1) {
+            return rows.map(row => new jobOffer({
+                jobOffer_id: rows[0].jobOffer_id, recruiter_id: rows[0].recruiter_id, available: rows[0].available, remote: rows[0].remote, organizationName: rows[0].organizationName, jobOffer_role: rows[0].jobOffer_role, jobOffer_description: rows[0].jobOffer_description, country: rows[0].country, city: rows[0].city, updatedAt: rows[0].updatedAt
+            }));
+        }
 
-        return rows.map(row => new jobOffer({
-            jobOffer_id: row['jobOffer_id'], recruiter_id: row['recruiter_id:'], available: row['available'], remote: row['remote'], organizationName: row['organizationName'], jobOffer_role: row['jobOffer_role'], jobOffer_description: row['jobOffer_description'], country: row['country'], city: row['city'], updatedAt: row['updatedAt']
-        }));
+        return null;
 
     }
 
