@@ -112,6 +112,15 @@ export class jobOffers_repository {
 
     }
 
+    static async getJobById(job_id: number) {
+        console.log("RECRUITER ID", job_id);
+
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM jobOffers WHERE jobOffer_id=?`, [job_id]);
+
+        return rows;
+
+    }
+
     static async getAVGjobRoleOffer() {
         const [rows] = await connection.query<RowDataPacket[]>(`SELECT jobOffer_role,CAST(100*count(*)  / 
         (SELECT count(*) from jobOffers)AS DECIMAL(4,2))   AS pourcentage  FROM jobOffers group by jobOffer_role;`);

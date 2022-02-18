@@ -214,7 +214,7 @@ JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { ses
 
 
 
-        const post = await jobOffers_repository.getJobByRecruiter(Number(req.params.job_id));
+        const post = await jobOffers_repository.getJobById(Number(req.params.job_id));
 
         return res.status(200).json({
             success: true,
