@@ -215,19 +215,18 @@ JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { ses
 
 
         const getOneJob = await jobOffers_repository.getJobById(Number(req.params.job_id));
-        let tags: jobTags[] = [];
+
 
 
         for (const theJob of getOneJob) {
             const jobTags = await uploads_repository.findTagsPerJobs(theJob.jobOffer_id);
             console.log("JOB TAGS", jobTags);
             theJob.tagDescription = [];
+            /*    theJob.tagDescription.push({...jobTags}); */
             for (const jobTag of jobTags) {
 
-                console.log(jobTag.description);
-                console.log(theJob.tagDescription);
 
-                theJob.tagDescription.push(jobTag.description);
+                theJob.tagDescription.push(jobTag);
             }
             console.log("the job", theJob.tagDescription);
 
@@ -356,3 +355,54 @@ JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { 
         res.status(500).json(error);
     }
 });
+
+JobOffersController.delete('/deleteTag/:jobTags_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+
+        await jobOffers_repository.deleteTag(Number(req.params.jobTags_id));
+        res.end();
+
+    }
+
+    catch (error) {
+        console.log("error is", error);
+        res.status(500).json(error);
+    }
+});
+
+JobOffersController.post('/addTag/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+
+        const newJob = new JobOffers(req.body);
+        console.log("new", req.body);
+
+        console.log("req.body.tags.length", req.body.tags.length);
+        if (req.body.tags.length > 0) {
+            let newTag: jobTags[] = [];
+
+            for (const oneTag of req.body.tags) {
+                newTag.push(oneTag);
+                newJob.tagDescription = newTag;
+
+            }
+        }
+
+        console.log("NWJOV", newJob);
+
+
+        await jobOffers_repository.addJob(req.user['user_id'], newJob);
+        res.status(201).json({
+            success: true,
+            data: newJob
+        })
+
+    }
+
+    catch (error) {
+        console.log("error is", error);
+        res.status(500).json(error);
+    }
+});
+

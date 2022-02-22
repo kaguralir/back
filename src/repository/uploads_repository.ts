@@ -1,4 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { jobTags } from "../entity/recruiter/tagsEntity";
 import { Uploads } from "../entity/uploads_entity";
 import { User } from "../entity/user_entity";
 import { connection } from "./connection";
@@ -51,10 +52,10 @@ export class uploads_repository {
 
     static async findTagsPerJobs(job_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM jobTags WHERE job_id=?", [job_id]);
-        /*    console.log("user", user_id);
-           console.log("rows", rows); */
 
-        return rows;
+
+        return rows.map(row => new jobTags({ jobTags_id: row['jobTags_id'], job_id: row['job_id'], description: row['description'] }));
+        console.log("rows", rows);
 
     }
     static async getSearchedJob(user_id: number) {

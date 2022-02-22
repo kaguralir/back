@@ -163,8 +163,12 @@ export class jobOffers_repository {
 
             const myDate = new Date(updateSearch.date);
             console.log("MY DATE", myDate);
+            if (updateSearch.values == null) {
+                return console.log('Error2');
+            }
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers  SET available=? , remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=?, updatedAt=CURRENT_TIMESTAMP WHERE jobOffer_id=? `, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
 
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers  SET available=?, remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=?, updatedAt=CURRENT_TIMESTAMP WHERE jobOffer_id=?`, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
+            console.log("ROW1", row1);
 
         }
         catch (err) {
@@ -172,6 +176,35 @@ export class jobOffers_repository {
         }
 
     }
+
+    static async deleteTag(jobTags_id: number) {
+        try {
+            await connection.query('DELETE FROM jobTags WHERE jobTags_id=?', [jobTags_id]);
+        }
+        catch (err) {
+            console.log("delete tag is", err)
+        }
+
+    }
+
+    static async addTag(job_id: number, tag: any) {
+
+        try {
+            console.log("adding search", tag);
+
+            const [addedTag] = await connection.query<ResultSetHeader>('INSERT INTO searchedJob (job_id, description) VALUES (?)', [job_id, tag.description]);
+            tag.jobTags_id = addedTag.insertId;
+
+
+
+        }
+        catch (err) {
+            console.log("adduser repo err is", err)
+        }
+
+    }
+
+
 
 }
 
