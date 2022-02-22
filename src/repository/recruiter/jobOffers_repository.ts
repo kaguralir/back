@@ -1,6 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { jobOffer } from "../../entity/jobs/jobOffer_entity";
 import { JobOffers } from "../../entity/recruiter/jobOffers_entity";
+import { jobTags } from "../../entity/recruiter/tagsEntity";
 import { User } from "../../entity/user_entity";
 
 import { connection } from "../connection";
@@ -166,9 +167,30 @@ export class jobOffers_repository {
             if (updateSearch.values == null) {
                 return console.log('Error2');
             }
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers  SET available=? , remote=?, organizationName=?, jobOffer_role=?, jobOffer_description=?,  country=?, city=?, updatedAt=CURRENT_TIMESTAMP WHERE jobOffer_id=? `, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers SET available= COALESCE(?,available), remote= COALESCE(?, remote), organizationName=COALESCE(?, organizationName),jobOffer_role= COALESCE(?,jobOffer_role), jobOffer_description= COALESCE(?,jobOffer_description), country= COALESCE(?,country), city= COALESCE(?,city) WHERE jobOffer_id=?`, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
 
-            console.log("ROW1", row1);
+
+            if (updateSearch.tags.length > 0) {
+                for (let i = 0; i < updateSearch.tags.length; i++) {
+                    console.log("I", i);
+
+                }
+                for (let oneTag of updateSearch.tags) {
+                    console.log("JOB ID", job_id);
+                    console.log("oneTag", oneTag);
+
+
+
+                    const [test] = await connection.query<ResultSetHeader>(`INSERT INTO jobTags  (job_id, description) VALUES (?,?)`, [job_id, oneTag]);
+                    /*    updateSearch.jobTags_id = test.insertId; */
+                    console.log("TEST", test);
+                    return;
+
+
+
+
+                }
+            }
 
         }
         catch (err) {
@@ -177,9 +199,9 @@ export class jobOffers_repository {
 
     }
 
-    static async deleteTag(jobTags_id: number) {
+    static async deleteTag(job_id: number) {
         try {
-            await connection.query('DELETE FROM jobTags WHERE jobTags_id=?', [jobTags_id]);
+            await connection.query('DELETE FROM jobTags WHERE job_id=?', [job_id]);
         }
         catch (err) {
             console.log("delete tag is", err)
@@ -192,7 +214,7 @@ export class jobOffers_repository {
         try {
             console.log("adding search", tag);
 
-            const [addedTag] = await connection.query<ResultSetHeader>('INSERT INTO searchedJob (job_id, description) VALUES (?)', [job_id, tag.description]);
+            const [addedTag] = await connection.query<ResultSetHeader>('INSERT INTO jobTags (job_id, description) VALUES (?,?)', [job_id, tag.description]);
             tag.jobTags_id = addedTag.insertId;
 
 

@@ -330,23 +330,23 @@ JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { 
         console.log("new", req.body);
         const udpateJob = await jobOffers_repository.updateJobOffer(Number(req.params.job_id), req.body);
         console.log("req.body.tags.length", req.body.tags.length);
-        /*       if (req.body.tags.length > 0) {
-                  let newTag: jobTags[] = [];
-      
-                  for (const oneTag of req.body.tags) {
-                      newTag.push(oneTag);
-                      udpateJob.tagDescription = newTag;
-      
-                  }
-              } */
+        if (req.body.tags.length > 0) {
+            let newTag: jobTags[] = [];
+            await jobOffers_repository.deleteTag(Number(req.params.job_id));
+            for (const oneTag of req.body.tags) {
+                newTag.push(oneTag);
 
-        console.log("udpateJob", udpateJob);
+                /*                       udpateJob.tagDescription = newTag;
+                 */
+            }
+            console.log("tags", newTag);
 
+        }
 
 
         res.status(201).json({
             success: true,
-            data: udpateJob
+            message: 'job updated'
         })
 
     }
