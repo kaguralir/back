@@ -46,7 +46,6 @@
   },
   "scripts": {
     "start": " ts-node-dev --files --respawn index.ts",
-    "build": "react-scripts build",
     "test": "jest --watch",
     "eject": "react-scripts eject"
   },
