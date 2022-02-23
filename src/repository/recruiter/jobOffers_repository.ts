@@ -219,6 +219,16 @@ export class jobOffers_repository {
 
     }
 
+    static async deleteSpecificTag(description: string) {
+        try {
+            await connection.query('DELETE FROM jobTags WHERE description=? AND job_id=? ', [description]);
+        }
+        catch (err) {
+            console.log("delete tag is", err)
+        }
+
+    }
+
     static async addTag(job_id: number, tag: any) {
 
         try {

@@ -327,7 +327,6 @@ JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: f
 JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
 
-        console.log("new", req.body);
         const udpateJob = await jobOffers_repository.updateJobOffer(Number(req.params.job_id), req.body);
         console.log("req.body.tags.length", req.body.tags.length);
         if (req.body.tags.length > 0) {
@@ -335,8 +334,7 @@ JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { 
             await jobOffers_repository.deleteTag(Number(req.params.job_id));
             for (const oneTag of req.body.tags) {
                 newTag.push(oneTag);
-                console.log("NEW TAGE", newTag);
-                console.log("ONETAGE", oneTag);
+
 
                 await jobOffers_repository.addTag(Number(req.params.job_id), oneTag);
 
@@ -367,6 +365,22 @@ JobOffersController.delete('/deleteTag/:jobTags_id', passport.authenticate('jwt'
 
 
         await jobOffers_repository.deleteTag(Number(req.params.jobTags_id));
+        res.end();
+
+    }
+
+    catch (error) {
+        console.log("error is", error);
+        res.status(500).json(error);
+    }
+});
+
+JobOffersController.delete('/deleteSpecificTag/:removedTag', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+
+        console.log("req body", req.params.removedTag);
+
+        await jobOffers_repository.deleteSpecificTag(req.params.removedTag);
         res.end();
 
     }
