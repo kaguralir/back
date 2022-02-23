@@ -158,39 +158,49 @@ export class jobOffers_repository {
 
     static async updateJobOffer(job_id: number, updateSearch) {
         try {
-            console.log("UDPATESEARCH", updateSearch);
 
-            console.log("UDPATE2", updateSearch.date);
 
             const myDate = new Date(updateSearch.date);
-            console.log("MY DATE", myDate);
+
             if (updateSearch.values == null) {
                 return console.log('Error2');
             }
             const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers SET available= COALESCE(?,available), remote= COALESCE(?, remote), organizationName=COALESCE(?, organizationName),jobOffer_role= COALESCE(?,jobOffer_role), jobOffer_description= COALESCE(?,jobOffer_description), country= COALESCE(?,country), city= COALESCE(?,city) WHERE jobOffer_id=?`, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
 
 
-            if (updateSearch.tags.length > 0) {
-                for (let i = 0; i < updateSearch.tags.length; i++) {
-                    console.log("I", i);
+            // if (updateSearch.tags.length > 0) {
 
-                }
-                for (let oneTag of updateSearch.tags) {
-                    console.log("JOB ID", job_id);
-                    console.log("oneTag", oneTag);
+            //     updateSearch.tags.map(async (item) =>
+
+            //         await connection.query<ResultSetHeader>('INSERT INTO jobTags  (job_id, description) VALUES (?,?)', [job_id, item])
+
+            //     )
+
+            //     const [test2] = await connection.query<ResultSetHeader>(`SELECT * FROM jobTags  WHERE job_id=?`, [job_id]);
+            //     const [test3] = await connection.query<ResultSetHeader>(`SELECT * FROM jobTags`, [job_id]);
+
+            //     console.log("TEST", test2);
+            //     console.log("TEST", test3);
+
+            //     // for (let i = 0; i < updateSearch.tags.length; i++) {
+            //     //     console.log("I", i);
+
+            //     // }
+            //     // for (let oneTag of updateSearch.tags) {
+            //     //     console.log("JOB ID", job_id);
+            //     //     console.log("oneTag", oneTag);
 
 
-
-                    const [test] = await connection.query<ResultSetHeader>(`INSERT INTO jobTags  (job_id, description) VALUES (?,?)`, [job_id, oneTag]);
-                    /*    updateSearch.jobTags_id = test.insertId; */
-                    console.log("TEST", test);
-                    return;
+            //     //     /*                     const [test] = await connection.query<ResultSetHeader>(`INSERT INTO jobTags  (job_id, description) VALUES (?,?)`, [job_id, oneTag]);
+            //     //      */                    /*    updateSearch.jobTags_id = test.insertId; */
 
 
+            //     //     return;
+
+            //     // }
 
 
-                }
-            }
+            // }
 
         }
         catch (err) {
@@ -212,10 +222,10 @@ export class jobOffers_repository {
     static async addTag(job_id: number, tag: any) {
 
         try {
-            console.log("adding search", tag);
 
-            const [addedTag] = await connection.query<ResultSetHeader>('INSERT INTO jobTags (job_id, description) VALUES (?,?)', [job_id, tag.description]);
-            tag.jobTags_id = addedTag.insertId;
+
+            const [addedTag] = await connection.query<ResultSetHeader>('INSERT INTO jobTags (job_id, description) VALUES (?,?)', [job_id, tag]);
+
 
 
 

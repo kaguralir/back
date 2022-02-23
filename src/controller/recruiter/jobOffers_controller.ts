@@ -335,6 +335,12 @@ JobOffersController.patch('/updatedJob/:job_id', passport.authenticate('jwt', { 
             await jobOffers_repository.deleteTag(Number(req.params.job_id));
             for (const oneTag of req.body.tags) {
                 newTag.push(oneTag);
+                console.log("NEW TAGE", newTag);
+                console.log("ONETAGE", oneTag);
+
+                await jobOffers_repository.addTag(Number(req.params.job_id), oneTag);
+
+
 
                 /*                       udpateJob.tagDescription = newTag;
                  */
