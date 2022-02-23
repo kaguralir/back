@@ -1,5 +1,6 @@
 
 import Joi from 'joi';
+import { Interest } from './interest/interest_entity';
 import { jobOffer } from './jobs/jobOffer_entity';
 import { Uploads } from './uploads_entity';
 export class User {
@@ -15,6 +16,7 @@ export class User {
   public images: Uploads[] = [];
   public pdfs: Uploads;
   public job: jobOffer;
+  public interest: Interest[];
 
 
   constructor(params) {

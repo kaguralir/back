@@ -12,8 +12,8 @@ export const ConversationsController = Router();
 
 ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        console.log("req.user", req.user);
         const actualRole = req.user['role'];
+        console.log("req.user", req.user['role']);
 
         if (actualRole == "Candidat") {
 
@@ -53,17 +53,38 @@ ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('j
         const allUploads: Uploads[] = [];
         const jobPerInterest: jobOffer[] = [];
 
+
         for (const oneInterest of interest) {
 
-            const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
-            let job = new jobOffer(userJoboffer);
-            jobPerInterest.push(job);
+            /*     const userJoboffer = await uploads_repository.findJobPerId(oneInterest.jobApplied_id);
+                let job = new jobOffer(userJoboffer);
+                jobPerInterest.push(job); */
 
-            const userUploads = await uploads_repository.candidateFindUploadsPerUser(oneInterest.jobApplied_id);
+            const userUploads = await uploads_repository.findUploadsPerUser(oneInterest.candidateWhoApplied_id);
+
 
             let uploads = new Uploads(userUploads);
 
             allUploads.push(uploads);
+
+            oneInterest.images = [];
+            oneInterest.pdf = ''
+
+            for (const row of userUploads) {
+
+
+
+
+                if (row.fileName != null) {
+                    oneInterest.images.push(row.thumbnail);
+                    console.log("IMAGES", oneInterest.images);
+                }
+
+                if (row.pdfFileName != null) {
+                    oneInterest.pdf = row.pdfFileName;
+                    console.log("pdf", oneInterest.pdf);
+                }
+            }
 
         }
 

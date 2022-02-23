@@ -1,11 +1,14 @@
 import { jobOffer } from "../jobs/jobOffer_entity";
 import { Uploads } from "../uploads_entity";
+import { User } from "../user_entity";
 
 export class Interest {
 
     public images: Uploads[] = [];
     public pdfs: Uploads;
     public job: jobOffer;
+    public user: User;
+
     constructor(public interest_id: number, public jobApplied_id: number, public candidateWhoApplied_id: number, public recruiterJobOffer_id: number, public interest: number) {
 
     }

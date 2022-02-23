@@ -65,7 +65,7 @@ export class conversations_repository {
 
     static async recruiterAllMutualInterestPerUser(user_id: number) {
         try {
-            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest WHERE recruiterJobOffer_id = ?  AND interest=1`, [user_id]);
+            const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM interest JOIN jobOffers ON jobApplied_id=jobOffer_id WHERE recruiter_id = ?  AND interest=1;`, [user_id]);
 
 
             return row;
