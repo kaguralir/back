@@ -13,7 +13,7 @@ export const ConversationsController = Router();
 ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const actualRole = req.user['role'];
-        console.log("req.user", req.user['role']);
+
 
         if (actualRole == "Candidat") {
 
