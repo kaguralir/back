@@ -72,9 +72,6 @@ ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('j
 
             for (const row of userUploads) {
 
-
-
-
                 if (row.fileName != null) {
                     oneInterest.images.push(row.thumbnail);
                     console.log("IMAGES", oneInterest.images);
