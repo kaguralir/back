@@ -21,7 +21,7 @@ CREATE TABLE searchedJob(
   country VARCHAR (100),
   car_ownership  TINYINT (1),
   job_title VARCHAR(100),
-  description VARCHAR(100),
+  description VARCHAR(1000),
     skill1 VARCHAR(100),
   skill2 VARCHAR(100),
   skill3 VARCHAR(100),
