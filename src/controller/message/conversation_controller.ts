@@ -26,9 +26,9 @@ ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('j
 
                 for (const row of recruiter) {
                     console.log("row", oneInterest.jobApplied_id);
-                    const recruiterUploads = await uploads_repository.findUploadsPerUser(row.recruiter_id);
+                    const recruiterUploads = await uploads_repository.findImagePerUser(row.recruiter_id);
 
-                    if (row.jobApplied_id === oneInterest.jobApplied_id) {
+                    
 
                         oneInterest.images = [];
                         oneInterest.job = [];
@@ -37,10 +37,9 @@ ConversationsController.get('/mutualInterest/:user_id', passport.authenticate('j
                         oneInterest.job.push(recruiter)
                         console.log("IMAGES", oneInterest.images);
 
-
-                    }
-
                 }
+
+                
 
             }
             return res.status(200).json({
