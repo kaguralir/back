@@ -249,12 +249,77 @@ JobOffersController.get('/getOnejob/:job_id', passport.authenticate('jwt', { ses
     }
 });
 
-JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: false }), async (req, res) => {
+JobOffersController.get('/getJobTestPerJob', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         const candidate_id = req.user['user_id'];
 
 
         const getJobs = await jobOffers_repository.getJobsTest(candidate_id);
+
+        let allUploads: Uploads[] = [];
+        for (const job of getJobs) {
+            const user = job.recruiter_id;
+
+            const userUploads = await uploads_repository.findImagePerUser(user);
+
+            for (const row of userUploads) {
+                    if (row.fileName !== null) {
+                        job.images = [];
+
+                        job.images.push(row.fileName);
+    
+                    }
+
+            }
+
+
+        }
+
+        let tags: jobTags[] = [];
+        for (const job of getJobs) {
+            const oneJob = job.jobOffer_id;
+
+            const jobTags = await uploads_repository.findTagsPerJobs(oneJob);
+            /*        console.log("TAGS", jobTags); */
+
+
+            for (const row of jobTags) {
+
+                if (row.job_id === job.jobOffer_id) {
+                    console.log("row", row);
+
+                    job.tagDescription = [];
+                    /*                     console.log('jobTags', jobTags);
+                     */
+                    job.tagDescription.push(jobTags);
+                    /*                     console.log("IMAGES", job.tagDescription);
+                     */
+                }
+            }
+        }
+
+
+
+        return res.status(200).json({
+            success: true,
+            count: getJobs.length,
+            data: getJobs
+        });
+    } catch (err) {
+        console.log("err get all jobs is", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
+JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        const candidate_id = req.user['user_id'];
+
+
+        const getJobs = await jobOffers_repository.getJobsTestPerJob(candidate_id);
 
         let allUploads: Uploads[] = [];
         for (const job of getJobs) {
@@ -321,6 +386,7 @@ JobOffersController.get('/getJobTest', passport.authenticate('jwt', { session: f
         });
     }
 });
+
 
 
 
