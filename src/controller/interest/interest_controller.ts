@@ -6,6 +6,7 @@ import { interest_repository } from "../../repository/interest/interest_reposito
 import { user_repository } from "../../repository/user_repository";
 import { Interest } from "../../entity/interest/interest_entity";
 import { User } from "../../entity/user_entity";
+import { uploads_repository } from "../../repository/uploads_repository";
 
 
 export const InterestController = Router();
@@ -35,6 +36,35 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
         const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(Number(req.params.id));
 
+
+        for (const candidate of jobCandidatesWithoutInterest) {
+            const user = candidate.user_id;
+
+            const userUploads = await uploads_repository.findImagePerUser(user);
+
+            for (const row of userUploads) {
+
+                if (row.fileName !== null) {
+                    candidate.images = [];
+
+                    console.log("row", row);
+
+                    console.log("row", row.thumbnail);
+                    console.log("row.fileName", row.fileName);
+
+                    candidate.images.push(row.fileName);
+                    console.log("row",  candidate.images);
+
+                }
+
+                /*     let uploads = new Uploads(row);
+    
+                    allUploads.push(uploads);
+     */
+            }
+
+
+        }
         return res.status(200).json({
             success: true,
             count: jobCandidatesWithoutInterest.length,
@@ -54,7 +84,7 @@ InterestController.get('/WithoutInterest/:id', passport.authenticate('jwt', { se
     try {
         console.log("req without interest id", req.params.id);
         console.log("req without interest body", req.body);
-        
+
 
         const jobCandidatesWithoutInterest = await interest_repository.getWithoutInterestPerIdPerJobTitle(Number(req.params.id), req.body.job_title);
 

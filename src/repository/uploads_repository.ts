@@ -39,6 +39,15 @@ export class uploads_repository {
 
     }
 
+
+    static async findImagePerUser(user_id: number, withPerson = false) {
+        const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM uploads WHERE userUploader_id=?", [user_id]);
+        /*    console.log("user", user_id);
+           console.log("rows", rows); */
+
+        return rows.map(row => new Uploads({ fileName: row['fileName']}));
+
+    }
     static async findRecruiterPerJob(job_id: number) {
         const [rows] = await connection.query<RowDataPacket[]>("SELECT * FROM jobOffers JOIN interest ON jobOffer_id=jobApplied_id JOIN user ON recruiter_id=user_id  WHERE jobOffers.jobOffer_id=?", [job_id]);
         /*    console.log("user", user_id);
