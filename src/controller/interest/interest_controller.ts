@@ -49,6 +49,29 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
     }
 });
 
+////PART 2
+InterestController.get('/WithoutInterest/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        console.log("req without interest id", req.params.id);
+        console.log("req without interest body", req.body);
+        
+
+        const jobCandidatesWithoutInterest = await interest_repository.getWithoutInterestPerIdPerJobTitle(Number(req.params.id), req.body.job_title);
+
+        return res.status(200).json({
+            success: true,
+            count: jobCandidatesWithoutInterest.length,
+            data: jobCandidatesWithoutInterest
+        });
+    } catch (err) {
+        console.log("err", err);
+        return res.status(500).json({
+            success: false,
+            error: 'Server Error'
+        });
+    }
+});
+
 
 InterestController.post('/interestActivity/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {

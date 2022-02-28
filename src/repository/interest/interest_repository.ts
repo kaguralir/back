@@ -144,8 +144,19 @@ export class interest_repository {
             return
         }
     }
+
+
     static async getJobCandidatesWithoutInterestByJob(job_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user   INNER JOIN uploads ON user_id=userUploader_id  LEFT OUTER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat" AND fileName IS NOT NULL  GROUP BY user_id`, [job_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM user LEFT OUTER JOIN searchedJob ON user_id=candidat_id INNER JOIN jobOffers ON job_title=jobOffer_role LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat";`, [job_id]);
+
+        return rows;
+
+    }
+
+    //part2
+    static async getWithoutInterestPerIdPerJobTitle(job_id: number, job_title:string) {
+        const [rows] = await connection.query<RowDataPacket[]>(`    SELECT * FROM user INNER JOIN searchedJob ON user_id=candidat_id  LEFT OUTER JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id NOT LIKE ? OR jobApplied_id IS NULL AND role="candidat" AND job_title=?;
+        `, [job_id, job_title]);
 
         return rows;
 
@@ -155,7 +166,7 @@ export class interest_repository {
     static async getInterestedRecruiterPerJob(job_id: number, candidat_id: number) {
         try {
             const [row] = await connection.query<RowDataPacket[]>(`SELECT * FROM user JOIN interest ON user_id=candidateWhoApplied_id WHERE jobApplied_id =?  AND  candidateWhoApplied_id=? AND recruiterJobOffer_id IS NOT NULL AND interest IS NULL`, [job_id, candidat_id]);
-            /* 
+        /* 
                     console.log("row getInterestedRecruiterPerJob", row); */
 
             /*         return new Interest(row['interest_id'], row['jobApplied_id'], row['candidateWhoApplied_id'], row['recruiterJobOffer_id'], row['interest']);
