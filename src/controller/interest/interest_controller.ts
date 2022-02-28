@@ -137,7 +137,6 @@ InterestController.post('/interestActivity/', passport.authenticate('jwt', { ses
 
 
             const candidateInterest = await interest_repository.getCandidateInterestedByJob(jobApplied_id, candidat_id);
-            console.log("candidate interest", candidateInterest);
 
             const recruiterAlreadyAnswer = await interest_repository.getRecruiterAnswer(jobApplied_id, candidat_id);
 
