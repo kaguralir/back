@@ -62,6 +62,7 @@ export class user_repository {
         try {
             const [addedUser] = await connection.query<ResultSetHeader>(`INSERT INTO user (name,role,email, password) VALUES(?,?,?,?)`, [newUser.name, newUser.role, newUser.email, newUser.password]);
             newUser.user_id = addedUser.insertId;
+console.log("new", newUser);
 
             for (const val of newUser.images) {
 
