@@ -77,7 +77,7 @@ export class searchedJob_repository {
 
 
     static async getSearchedJobByCandidate(candidate_id: number) {
-        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM searchedJob INNER JOIN skillsCandidate ON candidat_id=candidatSkills_id WHERE candidat_id=?`, [candidate_id]);
+        const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM searchedJob WHERE candidat_id=?`, [candidate_id]);
         console.log("rows search by candidate", candidate_id);
 
         return rows;
