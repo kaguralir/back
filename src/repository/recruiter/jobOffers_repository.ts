@@ -166,12 +166,21 @@ export class jobOffers_repository {
         try {
 
 
+            console.log("updatedSZAERCH", updateSearch);
+            
+
             const myDate = new Date(updateSearch.date);
 
             if (updateSearch.values == null) {
                 return console.log('Error2');
             }
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers SET available= COALESCE(?,available), remote= COALESCE(?, remote), organizationName=COALESCE(?, organizationName),jobOffer_role= COALESCE(?,jobOffer_role), jobOffer_description= COALESCE(?,jobOffer_description), country= COALESCE(?,country), city= COALESCE(?,city) WHERE jobOffer_id=?`, [updateSearch.values.available, updateSearch.values.remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
+
+            let available=1;
+
+            if(updateSearch.values.Available==false){
+                available=0
+            }
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE jobOffers SET available= COALESCE(?,available), remote= COALESCE(?, remote), organizationName=COALESCE(?, organizationName),jobOffer_role= COALESCE(?,jobOffer_role), jobOffer_description= COALESCE(?,jobOffer_description), country= COALESCE(?,country), city= COALESCE(?,city) WHERE jobOffer_id=?`, [available, updateSearch.values.Remote, updateSearch.values.orgName, updateSearch.values.jobRole, updateSearch.values.jobDescription, updateSearch.values.Country, updateSearch.values.City, job_id]);
 
 
             // if (updateSearch.tags.length > 0) {
