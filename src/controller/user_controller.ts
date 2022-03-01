@@ -110,10 +110,7 @@ UserController.post('/register', async (req, res, next) => {
         if (req.body.pdf.length > 0) {
             const pdfFile = await uploadPdf(req.body.pdf)
             newUser.pdfs = new Uploads({ pdfFileName: pdfFile, user: newUser })
-
-
-            console.log("NEW PDF", pdfFile);
-        }
+        } 
         await user_repository.addUser(newUser);
         res.status(201).json({
             message: 'Nouvel utilisateur enregistré',
