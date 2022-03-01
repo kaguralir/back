@@ -55,7 +55,7 @@ CREATE TABLE jobTags (
   description VARCHAR(100)
 );
 
-
+DROP TABLE IF EXISTS jobOffers;
 CREATE TABLE jobOffers(
   jobOffer_id INTEGER AUTO_INCREMENT PRIMARY KEY,
   recruiter_id INTEGER(100),
@@ -64,7 +64,7 @@ CREATE TABLE jobOffers(
   remote VARCHAR(50),
   organizationName VARCHAR(100),
   jobOffer_role VARCHAR(100),
-  jobOffer_description VARCHAR(100),
+  jobOffer_description VARCHAR(1000),
   country VARCHAR(100),
   city VARCHAR(100),
   updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

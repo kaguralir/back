@@ -36,6 +36,7 @@ InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticat
 
         const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(Number(req.params.id));
 
+console.log("CANDIDATES", jobCandidatesWithoutInterest);
 
         for (const candidate of jobCandidatesWithoutInterest) {
             const user = candidate.user_id;
