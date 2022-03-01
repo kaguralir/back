@@ -32,11 +32,9 @@ InterestController.get('/jobCandidatesWithInterest/:id', passport.authenticate('
 
 InterestController.get('/jobCandidatesWithoutInterest/:id', passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        console.log("req", req.params.id);
 
         const jobCandidatesWithoutInterest = await interest_repository.getJobCandidatesWithoutInterestByJob(Number(req.params.id));
 
-console.log("CANDIDATES", jobCandidatesWithoutInterest);
 
         for (const candidate of jobCandidatesWithoutInterest) {
             const user = candidate.user_id;
