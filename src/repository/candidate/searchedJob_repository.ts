@@ -61,8 +61,15 @@ export class searchedJob_repository {
         try {
             console.log("UDPATESEARCH", updateSearch);
 
-
-            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET available=?, remote=?, beginDate=?, city=?, country=?,  car_ownership=?, job_title=?, description=?, skill1=? WHERE searchedJob_id=?`, [updateSearch.available, updateSearch.remote, updateSearch.beginDate, updateSearch.city, updateSearch.country, updateSearch.car_owernship, updateSearch.job_title, updateSearch.description, updateSearch.skill1, jobSearch_id]);
+            const [row1] = await connection.query<ResultSetHeader>(`UPDATE searchedJob SET 
+            available=COALESCE(?,available),
+             remote=COALESCE(?,remote), 
+             beginDate=COALESCE(?,beginDate), 
+             city=COALESCE(?,city),
+              country=COALESCE(?,country), 
+               car_ownership=COALESCE(?,car_ownership), 
+               job_title=COALESCE(?,job_title),
+                description=COALESCE(?,description), skill1=COALESCE(?,skill1) WHERE searchedJob_id=?`, [updateSearch.available, updateSearch.remote, updateSearch.beginDate, updateSearch.city, updateSearch.country, updateSearch.car_owernship, updateSearch.job_title, updateSearch.description, updateSearch.skill1, jobSearch_id]);
             console.log("row1", row1);
 
 
